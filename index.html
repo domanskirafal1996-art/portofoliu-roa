@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portofoliu ROA — Agent Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --surface2: #1f2436;
+    --border: #2a3047;
+    --border-light: #333d5c;
+    --accent: #3d6eff;
+    --accent-glow: rgba(61,110,255,0.18);
+    --accent2: #00c9a7;
+    --text: #e8ecf4;
+    --text-muted: #7a85a3;
+    --text-dim: #4a5270;
+    --danger: #ff4d6d;
+    --warning: #ffb347;
+    --success: #00c9a7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+  /* HEADER */
+  header {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 0 32px; height: 60px; display: flex; align-items: center;
+    justify-content: space-between; position: sticky; top: 0; z-index: 100;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.05rem; }
+  .logo-badge { background: var(--accent); color: #fff; font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.08em; }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .db-info { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-muted); background: var(--surface2); border: 1px solid var(--border); padding: 5px 12px; border-radius: 6px; }
+  .db-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-dim); }
+  .db-dot.active { background: var(--success); box-shadow: 0 0 6px var(--success); }
+
+  /* IMPORT ZONE */
+  .import-zone { margin: 32px auto; max-width: 680px; border: 2px dashed var(--border-light); border-radius: 16px; padding: 48px 32px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--surface); }
+  .import-zone:hover, .import-zone.drag { border-color: var(--accent); background: rgba(61,110,255,0.04); }
+  .import-icon { font-size: 2.5rem; margin-bottom: 14px; }
+  .import-zone h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 6px; }
+  .import-zone p { font-size: 0.85rem; color: var(--text-muted); }
+  .import-btn { display: inline-block; margin-top: 18px; background: var(--accent); color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity 0.15s; }
+  .import-btn:hover { opacity: 0.85; }
+  .col-map-hint { margin-top: 14px; font-size: 0.75rem; color: var(--text-dim); }
+  .col-map-hint span { display: inline-block; background: var(--surface2); border: 1px solid var(--border); padding: 2px 8px; border-radius: 4px; margin: 2px; font-family: 'DM Mono', monospace; font-size: 0.72rem; }
+
+  /* APP SHELL */
+  .app-shell { display: none; }
+  .app-shell.visible { display: block; }
+  .toolbar { padding: 20px 32px 0; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .search-wrap { flex: 1; min-width: 220px; position: relative; }
+  .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-dim); font-size: 1rem; pointer-events: none; }
+  .search-input { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px 10px 40px; color: var(--text); font-family: inherit; font-size: 0.9rem; outline: none; transition: border-color 0.15s; }
+  .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+  .search-input::placeholder { color: var(--text-dim); }
+  .filter-select { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 36px 10px 14px; color: var(--text); font-family: inherit; font-size: 0.88rem; outline: none; cursor: pointer; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%237a85a3' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; transition: border-color 0.15s; min-width: 180px; }
+  .filter-select:focus { border-color: var(--accent); }
+  .results-count { font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; padding: 0 4px; }
+  .results-count strong { color: var(--accent); }
+  .import-new-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); padding: 9px 16px; border-radius: 10px; font-family: inherit; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s; }
+  .import-new-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* TABLE */
+  .table-wrap { padding: 16px 32px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+  thead th { text-align: left; padding: 10px 14px; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 1px solid var(--border); cursor: pointer; white-space: nowrap; user-select: none; }
+  thead th:hover { color: var(--text); }
+  thead th.sorted .sort-icon { color: var(--accent); }
+  tbody tr { border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.1s; }
+  tbody tr:hover { background: var(--surface2); }
+  td { padding: 11px 14px; vertical-align: middle; }
+  .mono { font-family: 'DM Mono', monospace; font-size: 0.83rem; }
+  .cat-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+  .stock-chip { display: inline-flex; align-items: center; gap: 4px; font-family: 'DM Mono', monospace; font-size: 0.82rem; padding: 2px 8px; border-radius: 5px; font-weight: 500; }
+  .stock-chip.ok { background: rgba(0,201,167,0.12); color: var(--success); }
+  .stock-chip.low { background: rgba(255,179,71,0.12); color: var(--warning); }
+  .stock-chip.zero { background: rgba(255,77,109,0.1); color: var(--danger); }
+
+  /* DATA EXPIRARE CHIPS */
+  .exp-chip { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; font-family: 'DM Mono', monospace; white-space: nowrap; }
+  .exp-chip.exp-ok   { background: rgba(0,201,167,0.1);  color: var(--success); }
+  .exp-chip.exp-soon { background: rgba(255,179,71,0.13); color: var(--warning); }
+  .exp-chip.exp-past { background: rgba(255,77,109,0.12); color: var(--danger);  }
+  .exp-chip.exp-none { color: var(--text-dim); background: none; }
+
+  /* DETAIL PANEL */
+  .panel-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; display: none; align-items: flex-start; justify-content: flex-end; }
+  .panel-overlay.open { display: flex; }
+  .detail-panel { width: 440px; height: 100vh; background: var(--surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; animation: slideIn 0.22s ease; }
+  @keyframes slideIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  .panel-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; position: sticky; top: 0; background: var(--surface); z-index: 2; }
+  .panel-title { font-size: 1rem; font-weight: 700; line-height: 1.3; }
+  .panel-um { font-size: 0.8rem; color: var(--text-muted); margin-top: 3px; }
+  .panel-close { background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); width: 30px; height: 30px; border-radius: 6px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
+  .panel-close:hover { border-color: var(--danger); color: var(--danger); }
+  .panel-body { padding: 20px 24px; flex: 1; }
+
+  /* PRODUCT IMAGE */
+  .prod-img-wrap {
+    width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden;
+    background: var(--surface2); border: 1px solid var(--border);
+    margin-bottom: 16px; position: relative; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .prod-img-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .prod-img-placeholder { display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--text-dim); font-size: 0.82rem; }
+  .prod-img-placeholder .ph-icon { font-size: 2.2rem; }
+  .prod-img-overlay {
+    position: absolute; inset: 0; background: rgba(0,0,0,0.55);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.18s; border-radius: 10px;
+  }
+  .prod-img-wrap:hover .prod-img-overlay { opacity: 1; }
+  .prod-img-overlay span { color: #fff; font-size: 0.83rem; font-weight: 600; background: rgba(61,110,255,0.8); padding: 6px 14px; border-radius: 6px; }
+  .remove-img-btn {
+    position: absolute; top: 8px; right: 8px;
+    background: rgba(255,77,109,0.85); color: #fff; border: none;
+    width: 26px; height: 26px; border-radius: 50%; font-size: 0.85rem;
+    cursor: pointer; display: none; align-items: center; justify-content: center;
+    z-index: 3;
+  }
+  .prod-img-wrap:hover .remove-img-btn { display: flex; }
+
+  /* LIGHTBOX */
+  .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 500; display: none; align-items: center; justify-content: center; padding: 20px; }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 90vw; max-height: 88vh; border-radius: 10px; object-fit: contain; }
+  .lightbox-close { position: fixed; top: 18px; right: 22px; color: #fff; font-size: 1.6rem; cursor: pointer; background: rgba(255,255,255,0.1); border: none; width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+
+  /* INFO GRID */
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .info-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+  .info-card.full { grid-column: 1/-1; }
+  .info-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 5px; font-weight: 600; }
+  .info-val { font-size: 0.97rem; font-weight: 600; }
+  .info-val.price { font-family: 'DM Mono', monospace; font-size: 1.1rem; color: var(--accent); }
+
+  /* EXP CARD */
+  .exp-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+  .exp-card.exp-past-card { border-color: rgba(255,77,109,0.35); background: rgba(255,77,109,0.05); }
+  .exp-card.exp-soon-card { border-color: rgba(255,179,71,0.35); background: rgba(255,179,71,0.05); }
+
+  /* STOCK */
+  .stock-row { display: flex; gap: 8px; margin-bottom: 16px; }
+  .stock-card { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; text-align: center; }
+  .stock-city { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; margin-bottom: 6px; }
+  .stock-val { font-size: 1.4rem; font-weight: 700; font-family: 'DM Mono', monospace; }
+  .stock-val.ok { color: var(--success); }
+  .stock-val.low { color: var(--warning); }
+  .stock-val.zero { color: var(--danger); }
+
+  /* CALCULATOR */
+  .calc-section { background: linear-gradient(135deg, rgba(61,110,255,0.08), rgba(0,201,167,0.05)); border: 1px solid rgba(61,110,255,0.25); border-radius: 14px; padding: 18px 18px 20px; margin-top: 4px; }
+  .calc-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+  .calc-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .calc-label { font-size: 0.82rem; color: var(--text-muted); white-space: nowrap; min-width: 110px; }
+  .adaos-input { flex: 1; background: var(--surface); border: 1.5px solid var(--border); border-radius: 8px; padding: 9px 14px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 1rem; font-weight: 600; outline: none; transition: border-color 0.15s; text-align: right; }
+  .adaos-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+  .adaos-suffix { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
+  .price-result { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+  .price-result-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+  .price-final { font-family: 'DM Mono', monospace; font-size: 1.55rem; font-weight: 700; color: var(--success); }
+  .price-breakdown { font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; font-family: 'DM Mono', monospace; }
+  .copy-price-btn { margin-top: 12px; width: 100%; background: var(--accent); border: none; color: #fff; padding: 10px; border-radius: 8px; font-family: inherit; font-size: 0.88rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: opacity 0.15s; }
+  .copy-price-btn:hover { opacity: 0.85; }
+  .copy-price-btn.copied { background: var(--success); }
+
+  /* EMPTY STATE */
+  .empty-state { text-align: center; padding: 60px 32px; color: var(--text-dim); }
+  .empty-state .es-icon { font-size: 2.5rem; margin-bottom: 12px; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--surface2); border: 1px solid var(--border-light); color: var(--text); padding: 10px 20px; border-radius: 10px; font-size: 0.87rem; font-weight: 500; z-index: 999; opacity: 0; transition: all 0.25s; pointer-events: none; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span>📦 Portofoliu ROA</span>
+    <span class="logo-badge">AGENT</span>
+  </div>
+  <div class="header-right">
+    <div class="db-info">
+      <div class="db-dot" id="dbDot"></div>
+      <span id="dbStatus">Nicio bază de date încărcată</span>
+    </div>
+  </div>
+</header>
+
+<!-- IMPORT SCREEN -->
+<div id="importScreen" style="padding:20px 32px">
+  <div class="import-zone" id="dropZone"
+    onclick="document.getElementById('fileInput').click()"
+    ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+    <div class="import-icon">📂</div>
+    <h2>Importă lista de produse</h2>
+    <p>Trage fișierul Excel (.xlsx, .xls) sau CSV aici</p>
+    <button class="import-btn" onclick="event.stopPropagation(); document.getElementById('fileInput').click()">Alege fișier</button>
+    <div class="col-map-hint" style="margin-top:18px">
+      Coloane așteptate:
+      <br style="margin-bottom:6px">
+      <span>Denumire produs</span><span>UM</span><span>Categorie</span>
+      <span>Pret achizitie</span><span>Stoc Bucuresti</span><span>Stoc Brasov</span>
+      <span>Data expirare</span>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:16px">
+    <button class="import-btn" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-muted)" onclick="loadDemoData()">
+      🔬 Încarcă date demo
+    </button>
+  </div>
+</div>
+<input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleFile(event)">
+<input type="file" id="imgInput" accept="image/*" style="display:none" onchange="handleImgUpload(event)">
+
+<!-- APP SHELL -->
+<div class="app-shell" id="appShell">
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="searchInput" type="text" placeholder="Caută produs..." oninput="applyFilters()">
+    </div>
+    <select class="filter-select" id="catFilter" onchange="applyFilters()">
+      <option value="">Toate categoriile</option>
+    </select>
+    <select class="filter-select" id="expFilter" style="min-width:160px" onchange="applyFilters()">
+      <option value="">Toate termenele</option>
+      <option value="past">⛔ Expirate</option>
+      <option value="soon">⚠️ Expiră curând</option>
+      <option value="ok">✅ Valide</option>
+    </select>
+    <div class="results-count" id="resultsCount"></div>
+    <button class="import-new-btn" onclick="resetApp()">↑ Import nou</button>
+  </div>
+
+  <div class="table-wrap">
+    <table id="prodTable">
+      <thead>
+        <tr>
+          <th onclick="sortBy('denumire')">Denumire <span class="sort-icon" id="sort_denumire">↕</span></th>
+          <th onclick="sortBy('um')">UM <span class="sort-icon" id="sort_um">↕</span></th>
+          <th onclick="sortBy('categorie')">Categorie <span class="sort-icon" id="sort_categorie">↕</span></th>
+          <th onclick="sortBy('pret')">Preț Achiziție <span class="sort-icon" id="sort_pret">↕</span></th>
+          <th onclick="sortBy('stocBuc')">Stoc BUC <span class="sort-icon" id="sort_stocBuc">↕</span></th>
+          <th onclick="sortBy('stocBrv')">Stoc BRV <span class="sort-icon" id="sort_stocBrv">↕</span></th>
+          <th onclick="sortBy('dataTs')">Data Expirare <span class="sort-icon" id="sort_dataTs">↕</span></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <div class="empty-state" id="emptyState" style="display:none">
+      <div class="es-icon">🔎</div>
+      <p>Niciun produs găsit pentru criteriile selectate.</p>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL PANEL -->
+<div class="panel-overlay" id="panelOverlay" onclick="closePanel(event)">
+  <div class="detail-panel" id="detailPanel">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title" id="pTitle">—</div>
+        <div class="panel-um" id="pUM">—</div>
+      </div>
+      <button class="panel-close" onclick="closePanelDirect()">✕</button>
+    </div>
+    <div class="panel-body">
+
+      <!-- PRODUCT IMAGE -->
+      <div class="prod-img-wrap" id="imgWrap" onclick="imgWrapClick()">
+        <div class="prod-img-placeholder" id="imgPlaceholder">
+          <div class="ph-icon">🖼️</div>
+          <span>Click pentru a adăuga o poză</span>
+        </div>
+        <img id="prodImg" src="" alt="" style="display:none">
+        <div class="prod-img-overlay"><span>📷 Schimbă poza</span></div>
+        <button class="remove-img-btn" id="removeImgBtn" onclick="event.stopPropagation(); removeImg()" title="Șterge poza">✕</button>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-card full">
+          <div class="info-label">Categorie</div>
+          <div class="info-val" id="pCat">—</div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">Preț achiziție</div>
+          <div class="info-val price" id="pPret">—</div>
+        </div>
+        <!-- DATA EXPIRARE CARD -->
+        <div class="exp-card" id="pDataCard">
+          <div class="info-label">Data expirare</div>
+          <div id="pDataDisplay">—</div>
+          <div id="pDataSub" style="font-size:0.72rem;color:var(--text-dim);margin-top:3px;"></div>
+        </div>
+      </div>
+
+      <div class="stock-row">
+        <div class="stock-card">
+          <div class="stock-city">București</div>
+          <div class="stock-val" id="pStocBuc">—</div>
+        </div>
+        <div class="stock-card">
+          <div class="stock-city">Brașov</div>
+          <div class="stock-val" id="pStocBrv">—</div>
+        </div>
+      </div>
+
+      <div class="calc-section">
+        <div class="calc-title">🧮 Calculator adaos comercial</div>
+        <div class="calc-row">
+          <span class="calc-label">Adaos dorit</span>
+          <input class="adaos-input" id="adaosInput" type="number" min="0" max="999" step="0.5" value="20" oninput="calcPrice()">
+          <span class="adaos-suffix">%</span>
+        </div>
+        <div class="price-result">
+          <div>
+            <div class="price-result-label">Preț de ofertare</div>
+            <div class="price-breakdown" id="priceBreakdown">—</div>
+          </div>
+          <div class="price-final" id="priceFinal">—</div>
+        </div>
+        <button class="copy-price-btn" id="copyBtn" onclick="copyPrice()">📋 Copiază prețul</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// ─── STATE ───
+let allProducts = [];
+let filtered = [];
+let productImages = {}; // id -> base64
+let sortCol = '';
+let sortDir = 1;
+let selectedProduct = null;
+
+// ─── CATEGORY COLORS ───
+const catColors = {};
+const palette = [
+  ['rgba(61,110,255,0.15)','#3d6eff'],['rgba(168,85,247,0.15)','#a855f7'],
+  ['rgba(249,115,22,0.15)','#f97316'],['rgba(16,185,129,0.15)','#10b981'],
+  ['rgba(236,72,153,0.15)','#ec4899'],['rgba(234,179,8,0.15)','#eab308'],
+  ['rgba(20,184,166,0.15)','#14b8a6'],['rgba(239,68,68,0.15)','#ef4444'],
+];
+let catIdx = 0;
+function getCatColor(cat) {
+  if (!catColors[cat]) catColors[cat] = palette[catIdx++ % palette.length];
+  return catColors[cat];
+}
+
+// ─── DATE EXPIRARE UTILS ───
+// Parse dd.mm.yyyy or yyyy-mm-dd or Excel serial
+function parseExpDate(v) {
+  if (!v || v === '—') return null;
+  if (typeof v === 'number') {
+    const d = XLSX.SSF.parse_date_code(v);
+    if (d) return new Date(d.y, d.m - 1, d.d);
+    return null;
+  }
+  const s = String(v).trim();
+  // dd.mm.yyyy
+  const m1 = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+  if (m1) return new Date(+m1[3], +m1[2]-1, +m1[1]);
+  // yyyy-mm-dd
+  const m2 = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (m2) return new Date(+m2[1], +m2[2]-1, +m2[3]);
+  // dd/mm/yyyy
+  const m3 = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (m3) return new Date(+m3[3], +m3[2]-1, +m3[1]);
+  return null;
+}
+
+function formatDate(v) {
+  if (!v) return '—';
+  if (typeof v === 'number') {
+    const d = XLSX.SSF.parse_date_code(v);
+    if (d) return `${String(d.d).padStart(2,'0')}.${String(d.m).padStart(2,'0')}.${d.y}`;
+  }
+  return String(v).trim() || '—';
+}
+
+// Returns: 'past' | 'soon' | 'ok' | 'none'
+function expStatus(ts) {
+  if (!ts) return 'none';
+  const now = Date.now();
+  const diff = ts - now; // ms
+  if (diff < 0) return 'past';
+  if (diff < 30 * 24 * 3600 * 1000) return 'soon';
+  return 'ok';
+}
+
+function expLabel(status, dateStr) {
+  if (status === 'none') return { chip: 'exp-none', icon: '', text: dateStr || '—' };
+  if (status === 'past') return { chip: 'exp-past', icon: '⛔', text: dateStr };
+  if (status === 'soon') return { chip: 'exp-soon', icon: '⚠️', text: dateStr };
+  return { chip: 'exp-ok', icon: '✅', text: dateStr };
+}
+
+function daysUntil(ts) {
+  if (!ts) return null;
+  const d = Math.ceil((ts - Date.now()) / (1000 * 3600 * 24));
+  return d;
+}
+
+// ─── COLUMN MAPPING ───
+function normCol(s) { return String(s).toLowerCase().replace(/[^a-z0-9]/g,''); }
+const colMap = {
+  denumire: ['denumire','denumireprodus','produs','product','name'],
+  um: ['um','unitatemăsură','unitate','unit','unitatemeasura'],
+  categorie: ['categorie','category','cat','tip'],
+  pret: ['pretachizitie','pret','pretachiz','achizitie','price','cost','pretul'],
+  stocBuc: ['stocbucuresti','stocbuc','bucuresti','buc','stoc1'],
+  stocBrv: ['stocbrasov','stocbrv','brasov','brv','stoc2'],
+  data: ['dataexpirare','data','date','expirare','exp','validity','valabilitate','dataexp'],
+};
+function mapHeaders(headers) {
+  const res = {};
+  headers.forEach((h, i) => {
+    const n = normCol(String(h));
+    for (const [field, aliases] of Object.entries(colMap)) {
+      if (aliases.includes(n)) res[field] = i;
+    }
+  });
+  return res;
+}
+
+// ─── DRAG & DROP ───
+function onDragOver(e) { e.preventDefault(); document.getElementById('dropZone').classList.add('drag'); }
+function onDragLeave() { document.getElementById('dropZone').classList.remove('drag'); }
+function onDrop(e) { e.preventDefault(); document.getElementById('dropZone').classList.remove('drag'); const f = e.dataTransfer.files[0]; if (f) processFile(f); }
+function handleFile(e) { if (e.target.files[0]) processFile(e.target.files[0]); }
+
+function processFile(file) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, defval: '' });
+      if (rows.length < 2) { showToast('Fișierul pare gol!'); return; }
+      const map = mapHeaders(rows[0]);
+      if (!map.denumire) { showToast('Coloana "Denumire produs" nu a fost găsită!'); return; }
+      loadProducts(rows.slice(1), map);
+    } catch(err) { showToast('Eroare: ' + err.message); }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function loadProducts(rows, map) {
+  allProducts = rows
+    .filter(r => r[map.denumire] && String(r[map.denumire]).trim())
+    .map((r, i) => {
+      const rawDate = map.data !== undefined ? r[map.data] : '';
+      const parsedDate = parseExpDate(rawDate);
+      const dateStr = formatDate(rawDate);
+      return {
+        id: i,
+        denumire: String(r[map.denumire] ?? '').trim(),
+        um: String(r[map.um] ?? '—').trim(),
+        categorie: String(r[map.categorie] ?? 'Necategorizat').trim(),
+        pret: parseFloat(String(r[map.pret] ?? '0').replace(',', '.')) || 0,
+        stocBuc: parseFloat(r[map.stocBuc]) || 0,
+        stocBrv: parseFloat(r[map.stocBrv]) || 0,
+        data: dateStr,
+        dataTs: parsedDate ? parsedDate.getTime() : null,
+      };
+    });
+  initApp();
+}
+
+// ─── DEMO DATA ───
+function loadDemoData() {
+  const today = new Date();
+  const addDays = (d) => { const x = new Date(today); x.setDate(x.getDate()+d); return `${String(x.getDate()).padStart(2,'0')}.${String(x.getMonth()+1).padStart(2,'0')}.${x.getFullYear()}`; };
+  const demo = [
+    ['Ciment Portland CEM I 42.5R 25kg','sac','Materiale construcții',28.50,142,88, addDays(180)],
+    ['Placă OSB 18mm 2440x1220','buc','Materiale construcții',76.00,55,30, addDays(365)],
+    ['Țeavă PEX 16mm (rola 100m)','rola','Instalații',210.00,18,12, addDays(20)],
+    ['Cablu electric NYY-J 3x2.5mm','m','Electrice',4.80,500,320, addDays(500)],
+    ['Gresie porțelanată 60x60 Gri Antracit','m²','Finisaje',62.00,200,95, addDays(15)],
+    ['Vopsea lavabilă albă 15L','bidon','Finisaje',89.00,60,40, addDays(-10)],
+    ['Bulon expandabil M10x100 (set 50)','set','Scule & Unelte',28.00,75,35, addDays(90)],
+    ['Adeziv plăci ceramice 25kg','sac','Finisaje',22.00,180,110, addDays(60)],
+    ['Robinet colțar 1/2 crom','buc','Instalații',14.50,220,0, addDays(-5)],
+    ['Panou gips-carton 12.5mm 2600x1200','buc','Finisaje',48.00,90,55, addDays(200)],
+    ['Prelungitor 5 prize 3m cu siguranță','buc','Electrice',38.00,45,20, addDays(25)],
+    ['Șuruburi lemn Tx 4.5x60 (cutie 200)','cutie','Scule & Unelte',19.50,130,70, addDays(120)],
+    ['Spumă poliuretanică 750ml','buc','Materiale construcții',18.50,300,180, addDays(8)],
+    ['Parchet laminat 8mm stejar natur','m²','Finisaje',89.00,120,65, addDays(300)],
+    ['Sifon pardoseală inox 10x10','buc','Instalații',24.00,85,45, addDays(150)],
+    ['Disc abraziv 230mm granulație 60','buc','Scule & Unelte',6.50,400,250, addDays(-20)],
+    ['Bandă adezivă armată 50mmx25m','rola','Materiale construcții',12.00,200,120, addDays(45)],
+    ['Întrerupător simplu 16A alb','buc','Electrice',9.80,310,170, addDays(240)],
+    ['Piatră cubică granit gri 10x10','m²','Finisaje',145.00,30,15, addDays(400)],
+    ['Țeavă oțel zincat Dn25 6ml','buc','Instalații',67.00,40,0, addDays(5)],
+  ];
+  const map = {denumire:0,um:1,categorie:2,pret:3,stocBuc:4,stocBrv:5,data:6};
+  loadProducts(demo, map);
+}
+
+// ─── INIT ───
+function initApp() {
+  document.getElementById('importScreen').style.display = 'none';
+  document.getElementById('appShell').classList.add('visible');
+  document.getElementById('dbDot').classList.add('active');
+  document.getElementById('dbStatus').textContent = `${allProducts.length} produse încărcate`;
+
+  const cats = [...new Set(allProducts.map(p => p.categorie))].sort();
+  const sel = document.getElementById('catFilter');
+  sel.innerHTML = '<option value="">Toate categoriile</option>';
+  cats.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; sel.appendChild(o); });
+  applyFilters();
+}
+
+function resetApp() {
+  allProducts = []; filtered = []; productImages = {};
+  document.getElementById('appShell').classList.remove('visible');
+  document.getElementById('importScreen').style.display = 'block';
+  document.getElementById('dbDot').classList.remove('active');
+  document.getElementById('dbStatus').textContent = 'Nicio bază de date încărcată';
+  document.getElementById('searchInput').value = '';
+  document.getElementById('fileInput').value = '';
+}
+
+// ─── FILTERS ───
+function applyFilters() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  const cat = document.getElementById('catFilter').value;
+  const expF = document.getElementById('expFilter').value;
+
+  filtered = allProducts.filter(p => {
+    const mq = !q || p.denumire.toLowerCase().includes(q) || p.categorie.toLowerCase().includes(q) || p.um.toLowerCase().includes(q);
+    const mc = !cat || p.categorie === cat;
+    const st = expStatus(p.dataTs);
+    const me = !expF || st === expF;
+    return mq && mc && me;
+  });
+
+  if (sortCol) filtered.sort((a, b) => {
+    let va = a[sortCol], vb = b[sortCol];
+    if (va === null && vb === null) return 0;
+    if (va === null) return sortDir;
+    if (vb === null) return -sortDir;
+    if (typeof va === 'string') return va.localeCompare(vb) * sortDir;
+    return (va - vb) * sortDir;
+  });
+
+  renderTable();
+}
+
+function sortBy(col) {
+  if (sortCol === col) sortDir *= -1;
+  else { sortCol = col; sortDir = 1; }
+  document.querySelectorAll('.sort-icon').forEach(el => el.textContent = '↕');
+  const icon = document.getElementById('sort_' + col);
+  if (icon) icon.textContent = sortDir === 1 ? '↑' : '↓';
+  document.querySelectorAll('thead th').forEach(th => th.classList.remove('sorted'));
+  event.currentTarget.classList.add('sorted');
+  applyFilters();
+}
+
+// ─── RENDER TABLE ───
+function renderTable() {
+  const tbody = document.getElementById('tableBody');
+  const empty = document.getElementById('emptyState');
+  document.getElementById('resultsCount').innerHTML = `<strong>${filtered.length}</strong> produse`;
+
+  if (!filtered.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  tbody.innerHTML = filtered.map(p => {
+    const [bg, fg] = getCatColor(p.categorie);
+    const scBuc = p.stocBuc === 0 ? 'zero' : p.stocBuc < 10 ? 'low' : 'ok';
+    const scBrv = p.stocBrv === 0 ? 'zero' : p.stocBrv < 10 ? 'low' : 'ok';
+    const st = expStatus(p.dataTs);
+    const lb = expLabel(st, p.data);
+    const hasImg = !!productImages[p.id];
+    return `<tr onclick="openPanel(${p.id})">
+      <td style="font-weight:500;max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+        ${hasImg ? '<span style="font-size:.75rem;margin-right:5px;opacity:.6">🖼️</span>' : ''}${p.denumire}
+      </td>
+      <td style="color:var(--text-muted)">${p.um}</td>
+      <td><span class="cat-badge" style="background:${bg};color:${fg}">${p.categorie}</span></td>
+      <td class="mono" style="color:var(--accent)">${p.pret.toFixed(2)} RON</td>
+      <td><span class="stock-chip ${scBuc}">${p.stocBuc}</span></td>
+      <td><span class="stock-chip ${scBrv}">${p.stocBrv}</span></td>
+      <td><span class="exp-chip ${lb.chip}">${lb.icon ? lb.icon+' ' : ''}${lb.text}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ─── PANEL ───
+function openPanel(id) {
+  selectedProduct = allProducts.find(p => p.id === id);
+  if (!selectedProduct) return;
+  const p = selectedProduct;
+
+  document.getElementById('pTitle').textContent = p.denumire;
+  document.getElementById('pUM').textContent = `Unitate de măsură: ${p.um}`;
+  document.getElementById('pCat').textContent = p.categorie;
+  document.getElementById('pPret').textContent = `${p.pret.toFixed(2)} RON`;
+
+  // Expirare
+  const st = expStatus(p.dataTs);
+  const lb = expLabel(st, p.data);
+  const card = document.getElementById('pDataCard');
+  card.className = 'exp-card';
+  if (st === 'past') card.classList.add('exp-past-card');
+  if (st === 'soon') card.classList.add('exp-soon-card');
+  document.getElementById('pDataDisplay').innerHTML = `<span class="exp-chip ${lb.chip}" style="font-size:.9rem">${lb.icon ? lb.icon+' ' : ''}${lb.text}</span>`;
+  const days = daysUntil(p.dataTs);
+  const sub = document.getElementById('pDataSub');
+  if (st === 'past') sub.textContent = `Expirat acum ${Math.abs(days)} zile`;
+  else if (st === 'soon') sub.textContent = `Expiră în ${days} zile`;
+  else if (st === 'ok' && days !== null) sub.textContent = `Valabil încă ${days} zile`;
+  else sub.textContent = '';
+
+  // Stocuri
+  const sbClass = p.stocBuc === 0 ? 'zero' : p.stocBuc < 10 ? 'low' : 'ok';
+  const srvClass = p.stocBrv === 0 ? 'zero' : p.stocBrv < 10 ? 'low' : 'ok';
+  document.getElementById('pStocBuc').textContent = p.stocBuc;
+  document.getElementById('pStocBuc').className = 'stock-val ' + sbClass;
+  document.getElementById('pStocBrv').textContent = p.stocBrv;
+  document.getElementById('pStocBrv').className = 'stock-val ' + srvClass;
+
+  // Imagine
+  loadPanelImage(p.id);
+
+  document.getElementById('adaosInput').value = 20;
+  calcPrice();
+  document.getElementById('panelOverlay').classList.add('open');
+}
+
+function loadPanelImage(id) {
+  const img = document.getElementById('prodImg');
+  const placeholder = document.getElementById('imgPlaceholder');
+  const removeBtn = document.getElementById('removeImgBtn');
+  if (productImages[id]) {
+    img.src = productImages[id];
+    img.style.display = 'block';
+    placeholder.style.display = 'none';
+    removeBtn.style.display = 'flex'; // will show on hover via CSS
+  } else {
+    img.src = '';
+    img.style.display = 'none';
+    placeholder.style.display = 'flex';
+  }
+}
+
+function imgWrapClick() {
+  if (!selectedProduct) return;
+  document.getElementById('imgInput').click();
+}
+
+function handleImgUpload(e) {
+  const file = e.target.files[0];
+  if (!file || !selectedProduct) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('Poza trebuie să fie sub 5MB'); return; }
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    productImages[selectedProduct.id] = ev.target.result;
+    loadPanelImage(selectedProduct.id);
+    renderTable(); // refresh icon in table
+    showToast('✓ Poză adăugată');
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function removeImg() {
+  if (!selectedProduct) return;
+  delete productImages[selectedProduct.id];
+  loadPanelImage(selectedProduct.id);
+  renderTable();
+  showToast('Poză eliminată');
+}
+
+// Lightbox when clicking on existing image
+document.getElementById('prodImg').addEventListener('click', function(e) {
+  e.stopPropagation();
+  if (this.src && this.style.display !== 'none') {
+    document.getElementById('lightboxImg').src = this.src;
+    document.getElementById('lightbox').classList.add('open');
+  }
+});
+function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+
+function closePanel(e) { if (e.target === document.getElementById('panelOverlay')) closePanelDirect(); }
+function closePanelDirect() { document.getElementById('panelOverlay').classList.remove('open'); }
+
+function calcPrice() {
+  if (!selectedProduct) return;
+  const adaos = parseFloat(document.getElementById('adaosInput').value) || 0;
+  const pret = selectedProduct.pret;
+  const final = pret * (1 + adaos / 100);
+  document.getElementById('priceFinal').textContent = `${final.toFixed(2)} RON`;
+  document.getElementById('priceBreakdown').textContent = `${pret.toFixed(2)} + ${(final - pret).toFixed(2)} RON adaos (${adaos}%)`;
+  document.getElementById('copyBtn').classList.remove('copied');
+  document.getElementById('copyBtn').innerHTML = '📋 Copiează prețul';
+}
+
+function copyPrice() {
+  if (!selectedProduct) return;
+  const adaos = parseFloat(document.getElementById('adaosInput').value) || 0;
+  const final = selectedProduct.pret * (1 + adaos / 100);
+  const text = `${selectedProduct.denumire} — ${final.toFixed(2)} RON (adaos ${adaos}%)`;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.innerHTML = '✓ Copiat!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.innerHTML = '📋 Copiează prețul'; btn.classList.remove('copied'); }, 2000);
+  }).catch(() => showToast('Nu s-a putut copia'));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closePanelDirect(); closeLightbox(); }
+});
+</script>
+</body>
+</html>
