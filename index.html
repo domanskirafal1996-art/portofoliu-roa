@@ -367,17 +367,25 @@ function fmtDate(v) {
 // ── COLUMN MAP ──
 function nc(s) { return String(s).toLowerCase().replace(/[^a-z0-9]/g,''); }
 const colMap = {
-  denumire: ['denumire','denumireprodus','produs','product','name'],
-  um:       ['um','unitatemăsură','unitate','unit','unitatemeasura'],
-  categorie:['categorie','category','cat','tip'],
-  pret:     ['pretachizitie','pret','pretachiz','achizitie','price','cost','pretul'],
-  stocBuc:  ['stocbucuresti','stocbuc','bucuresti','buc','stoc1'],
-  stocBrv:  ['stocbrasov','stocbrv','brasov','brv','stoc2'],
-  data:     ['dataintrare','data','date','intrare','dataexp','dataexpirare','expirare'],
+  denumire: ['denumire','denumireprodus','produs','product','name','denumireprodus'],
+  um:       ['um','unitatemăsură','unitate','unit','unitatemeasura','um'],
+  categorie:['categorie','categorieprincipala','categorieprincipală','category','cat','tip'],
+  pret:     ['pretachizitie','pret','pretachiz','achizitie','price','cost','costultima','costiultima','costultimaachizitie','pretachizitie','pretur','preturi'],
+  stocBuc:  ['stocbucuresti','stocbuc','stocbucurești','bucuresti','buc','stoc1','stocbucures','stocbucu'],
+  stocBrv:  ['stocbrasov','stocbrașov','stocbrv','brasov','brasov','brv','stoc2','stocbrasov'],
+  data:     ['dataintrare','data','date','intrare','dataexp','dataexpirare','expirare','import'],
 };
 function mapHeaders(headers) {
   const res = {};
-  headers.forEach((h,i) => { const n=nc(String(h)); for(const[f,a] of Object.entries(colMap)) if(a.includes(n)) res[f]=i; });
+  headers.forEach((h,i) => {
+    const n = nc(String(h));
+    if (!n) return;
+    for (const [f,a] of Object.entries(colMap)) {
+      if (a.some(alias => n.includes(alias) || alias.includes(n))) {
+        if (res[f] === undefined) res[f] = i;
+      }
+    }
+  });
   return res;
 }
 
@@ -458,14 +466,35 @@ function processFile(file) {
   reader.onload = async e => {
     try {
       const wb = XLSX.read(new Uint8Array(e.target.result), {type:'array'});
-      const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1, defval:''});
-      if (rows.length < 2) { showToast('Fișierul pare gol!'); return; }
-      const map = mapHeaders(rows[0]);
-      if (!map.denumire) { showToast('Coloana "Denumire produs" nu a fost găsită!'); return; }
-      const products = buildProducts(rows.slice(1), map);
+
+      // Caută în TOATE sheet-urile, oricare conține "Denumire"
+      let foundRows = null, foundMap = null, foundSheet = null;
+      for (const sheetName of wb.SheetNames) {
+        const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], {header:1, defval:''});
+        // Header poate fi la orice rând din primele 10
+        for (let i = 0; i < Math.min(10, rows.length); i++) {
+          const map = mapHeaders(rows[i]);
+          if (map.denumire !== undefined) {
+            foundRows  = rows.slice(i + 1);
+            foundMap   = map;
+            foundSheet = sheetName;
+            break;
+          }
+        }
+        if (foundRows) break;
+      }
+
+      if (!foundRows || !foundMap) {
+        showToast('Coloana "Denumire Produs" nu a fost găsită în fișier!');
+        return;
+      }
+
+      const products = buildProducts(foundRows, foundMap);
+      if (!products.length) { showToast('Niciun produs valid găsit!'); return; }
+
       document.getElementById('dbDot').className = 'db-dot loading';
       document.getElementById('dbStatus').textContent = 'Se salvează...';
-      showToast('⬆ Se încarcă în Firebase...');
+      showToast(`⬆ Se încarcă ${products.length} produse din "${foundSheet}"...`);
       await saveProducts(products);
       showToast(`✓ ${products.length} produse salvate!`);
     } catch(err) { showToast('Eroare: ' + err.message); console.error(err); }
