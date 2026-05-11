@@ -7,25 +7,15 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0f1117;
-    --surface: #181c27;
-    --surface2: #1f2436;
-    --border: #2a3047;
-    --border-light: #333d5c;
-    --accent: #3d6eff;
-    --accent-glow: rgba(61,110,255,0.18);
-    --accent2: #00c9a7;
-    --text: #e8ecf4;
-    --text-muted: #7a85a3;
-    --text-dim: #4a5270;
-    --danger: #ff4d6d;
-    --warning: #ffb347;
-    --success: #00c9a7;
+    --bg: #0f1117; --surface: #181c27; --surface2: #1f2436;
+    --border: #2a3047; --border-light: #333d5c;
+    --accent: #3d6eff; --accent-glow: rgba(61,110,255,0.18); --accent2: #00c9a7;
+    --text: #e8ecf4; --text-muted: #7a85a3; --text-dim: #4a5270;
+    --danger: #ff4d6d; --warning: #ffb347; --success: #00c9a7;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
 
-  /* HEADER */
   header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
   .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.05rem; }
   .logo-badge { background: var(--accent); color: #fff; font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.08em; }
@@ -36,13 +26,11 @@
   .db-dot.loading { background: var(--warning); box-shadow: 0 0 6px var(--warning); animation: pulse 1s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-  /* LOADING SCREEN */
   .loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 16px; }
   .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .loading-text { font-size: 0.9rem; color: var(--text-muted); }
 
-  /* IMPORT ZONE */
   .import-zone { margin: 32px auto; max-width: 680px; border: 2px dashed var(--border-light); border-radius: 16px; padding: 48px 32px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--surface); }
   .import-zone:hover, .import-zone.drag { border-color: var(--accent); background: rgba(61,110,255,0.04); }
   .import-icon { font-size: 2.5rem; margin-bottom: 14px; }
@@ -52,12 +40,9 @@
   .import-btn:hover { opacity: 0.85; }
   .col-map-hint { margin-top: 14px; font-size: 0.75rem; color: var(--text-dim); }
   .col-map-hint span { display: inline-block; background: var(--surface2); border: 1px solid var(--border); padding: 2px 8px; border-radius: 4px; margin: 2px; font-family: 'DM Mono', monospace; font-size: 0.72rem; }
-
-  /* ADMIN BADGE */
-  .admin-banner { background: rgba(61,110,255,0.08); border: 1px solid rgba(61,110,255,0.2); border-radius: 10px; padding: 10px 16px; margin: 0 32px 0; display: flex; align-items: center; gap: 10px; font-size: 0.83rem; color: var(--text-muted); }
+  .admin-banner { background: rgba(61,110,255,0.08); border: 1px solid rgba(61,110,255,0.2); border-radius: 10px; padding: 10px 16px; margin: 16px 32px 0; display: flex; align-items: center; gap: 10px; font-size: 0.83rem; color: var(--text-muted); }
   .admin-banner strong { color: var(--accent); }
 
-  /* APP SHELL */
   .app-shell { display: none; }
   .app-shell.visible { display: block; }
   .toolbar { padding: 20px 32px 0; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
@@ -73,7 +58,6 @@
   .import-new-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); padding: 9px 16px; border-radius: 10px; font-family: inherit; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s; }
   .import-new-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* TABLE */
   .table-wrap { padding: 16px 32px; overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
   thead th { text-align: left; padding: 10px 14px; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 1px solid var(--border); cursor: pointer; white-space: nowrap; user-select: none; }
@@ -84,18 +68,13 @@
   td { padding: 11px 14px; vertical-align: middle; }
   .mono { font-family: 'DM Mono', monospace; font-size: 0.83rem; }
   .cat-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
-  .stock-chip { display: inline-flex; align-items: center; gap: 4px; font-family: 'DM Mono', monospace; font-size: 0.82rem; padding: 2px 8px; border-radius: 5px; font-weight: 500; }
-  .stock-chip.ok { background: rgba(0,201,167,0.12); color: var(--success); }
+  .stock-chip { display: inline-flex; align-items: center; font-family: 'DM Mono', monospace; font-size: 0.82rem; padding: 2px 8px; border-radius: 5px; font-weight: 500; }
+  .stock-chip.ok  { background: rgba(0,201,167,0.12); color: var(--success); }
   .stock-chip.low { background: rgba(255,179,71,0.12); color: var(--warning); }
-  .stock-chip.zero { background: rgba(255,77,109,0.1); color: var(--danger); }
-  .exp-chip { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; font-family: 'DM Mono', monospace; white-space: nowrap; }
-  .exp-chip.exp-ok   { background: rgba(0,201,167,0.1);  color: var(--success); }
-  .exp-chip.exp-soon { background: rgba(255,179,71,0.13); color: var(--warning); }
-  .exp-chip.exp-past { background: rgba(255,77,109,0.12); color: var(--danger); }
-  .exp-chip.exp-none { color: var(--text-dim); background: none; }
+  .stock-chip.zero{ background: rgba(255,77,109,0.1);  color: var(--danger); }
+  .date-chip { display: inline-block; padding: 3px 9px; border-radius: 6px; font-size: 0.78rem; font-family: 'DM Mono', monospace; color: var(--text-muted); }
 
-  /* DETAIL PANEL */
-  .panel-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; display: none; align-items: flex-start; justify-content: flex-end; }
+  .panel-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; display: none; justify-content: flex-end; }
   .panel-overlay.open { display: flex; }
   .detail-panel { width: 440px; height: 100vh; background: var(--surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; animation: slideIn 0.22s ease; }
   @keyframes slideIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
@@ -106,65 +85,54 @@
   .panel-close:hover { border-color: var(--danger); color: var(--danger); }
   .panel-body { padding: 20px 24px; flex: 1; }
 
-  /* PRODUCT IMAGE */
-  .prod-img-wrap { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; background: var(--surface2); border: 1px solid var(--border); margin-bottom: 16px; position: relative; display: flex; align-items: center; justify-content: center; }
-  .prod-img-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; cursor: zoom-in; }
-  .prod-img-placeholder { display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--text-dim); font-size: 0.82rem; cursor: pointer; width: 100%; height: 100%; justify-content: center; }
+  .prod-img-wrap { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; background: var(--surface2); border: 1px solid var(--border); margin-bottom: 16px; position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .prod-img-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .prod-img-placeholder { display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--text-dim); font-size: 0.82rem; }
   .prod-img-placeholder .ph-icon { font-size: 2.2rem; }
-  .prod-img-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.18s; }
+  .prod-img-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.18s; border-radius: 10px; }
   .prod-img-wrap:hover .prod-img-overlay { opacity: 1; }
   .prod-img-overlay span { color: #fff; font-size: 0.83rem; font-weight: 600; background: rgba(61,110,255,0.8); padding: 6px 14px; border-radius: 6px; pointer-events: none; }
-  .img-uploading { position: absolute; inset: 0; background: rgba(15,17,23,0.75); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; font-size: 0.83rem; color: var(--text-muted); }
-  .remove-img-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,77,109,0.85); color: #fff; border: none; width: 26px; height: 26px; border-radius: 50%; font-size: 0.8rem; cursor: pointer; align-items: center; justify-content: center; z-index: 3; display: none; }
+  .img-uploading { position: absolute; inset: 0; background: rgba(15,17,23,0.8); display: none; flex-direction: column; align-items: center; justify-content: center; gap: 10px; font-size: 0.83rem; color: var(--text-muted); border-radius: 10px; }
+  .remove-img-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,77,109,0.85); color: #fff; border: none; width: 26px; height: 26px; border-radius: 50%; font-size: 0.8rem; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 3; }
   .prod-img-wrap:hover .remove-img-btn { display: flex; }
 
-  /* LIGHTBOX */
   .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 500; display: none; align-items: center; justify-content: center; padding: 20px; }
   .lightbox.open { display: flex; }
   .lightbox img { max-width: 90vw; max-height: 88vh; border-radius: 10px; object-fit: contain; }
   .lightbox-close { position: fixed; top: 18px; right: 22px; color: #fff; font-size: 1.4rem; cursor: pointer; background: rgba(255,255,255,0.1); border: none; width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
 
-  /* INFO GRID */
   .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
   .info-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
   .info-card.full { grid-column: 1/-1; }
   .info-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 5px; font-weight: 600; }
   .info-val { font-size: 0.97rem; font-weight: 600; }
   .info-val.price { font-family: 'DM Mono', monospace; font-size: 1.1rem; color: var(--accent); }
-  .exp-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
-  .exp-card.exp-past-card { border-color: rgba(255,77,109,0.35); background: rgba(255,77,109,0.05); }
-  .exp-card.exp-soon-card { border-color: rgba(255,179,71,0.35); background: rgba(255,179,71,0.05); }
 
-  /* STOCK */
   .stock-row { display: flex; gap: 8px; margin-bottom: 16px; }
   .stock-card { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; text-align: center; }
   .stock-city { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; margin-bottom: 6px; }
   .stock-val { font-size: 1.4rem; font-weight: 700; font-family: 'DM Mono', monospace; }
-  .stock-val.ok { color: var(--success); }
-  .stock-val.low { color: var(--warning); }
+  .stock-val.ok   { color: var(--success); }
+  .stock-val.low  { color: var(--warning); }
   .stock-val.zero { color: var(--danger); }
 
-  /* CALCULATOR */
   .calc-section { background: linear-gradient(135deg, rgba(61,110,255,0.08), rgba(0,201,167,0.05)); border: 1px solid rgba(61,110,255,0.25); border-radius: 14px; padding: 18px 18px 20px; margin-top: 4px; }
-  .calc-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+  .calc-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 14px; }
   .calc-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
   .calc-label { font-size: 0.82rem; color: var(--text-muted); white-space: nowrap; min-width: 110px; }
   .adaos-input { flex: 1; background: var(--surface); border: 1.5px solid var(--border); border-radius: 8px; padding: 9px 14px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 1rem; font-weight: 600; outline: none; transition: border-color 0.15s; text-align: right; }
   .adaos-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
   .adaos-suffix { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
   .price-result { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
-  .price-result-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+  .price-result-label { font-size: 0.8rem; color: var(--text-muted); }
   .price-final { font-family: 'DM Mono', monospace; font-size: 1.55rem; font-weight: 700; color: var(--success); }
   .price-breakdown { font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; font-family: 'DM Mono', monospace; }
   .copy-price-btn { margin-top: 12px; width: 100%; background: var(--accent); border: none; color: #fff; padding: 10px; border-radius: 8px; font-family: inherit; font-size: 0.88rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: opacity 0.15s; }
   .copy-price-btn:hover { opacity: 0.85; }
   .copy-price-btn.copied { background: var(--success); }
 
-  /* EMPTY STATE */
   .empty-state { text-align: center; padding: 60px 32px; color: var(--text-dim); }
   .empty-state .es-icon { font-size: 2.5rem; margin-bottom: 12px; }
-
-  /* TOAST */
   .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--surface2); border: 1px solid var(--border-light); color: var(--text); padding: 10px 20px; border-radius: 10px; font-size: 0.87rem; font-weight: 500; z-index: 999; opacity: 0; transition: all 0.25s; pointer-events: none; white-space: nowrap; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -187,24 +155,21 @@
   </div>
 </header>
 
-<!-- LOADING -->
 <div id="loadingScreen" class="loading-screen">
   <div class="spinner"></div>
   <div class="loading-text">Se încarcă datele din Firebase...</div>
 </div>
 
-<!-- IMPORT SCREEN (admin only) -->
-<div id="importScreen" style="display:none; padding:20px 32px">
+<div id="importScreen" style="display:none; padding:0 0 32px;">
   <div class="admin-banner">
-    <span>🔐</span>
-    <span>Ești în modul <strong>Admin</strong> — poți importa și actualiza catalogul de produse. Agenții văd doar lista de produse.</span>
+    🔐 Ești în modul <strong>Admin</strong> — poți importa și actualiza catalogul pentru toți agenții.
   </div>
-  <div class="import-zone" id="dropZone" style="margin-top:20px"
+  <div class="import-zone" id="dropZone" style="margin:20px 32px 0;"
     onclick="document.getElementById('fileInput').click()"
     ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
     <div class="import-icon">📂</div>
     <h2>Importă / Actualizează catalogul de produse</h2>
-    <p>Trage fișierul Excel (.xlsx, .xls) sau CSV — va înlocui catalogul curent pentru toți agenții</p>
+    <p>Trage fișierul Excel (.xlsx, .xls) sau CSV — înlocuiește catalogul curent pentru toți agenții</p>
     <button class="import-btn" onclick="event.stopPropagation(); document.getElementById('fileInput').click()">Alege fișier</button>
     <div class="col-map-hint" style="margin-top:18px">
       Coloane așteptate:
@@ -214,7 +179,7 @@
       <span>Data intrare</span>
     </div>
   </div>
-  <div style="text-align:center;margin-top:12px;">
+  <div style="text-align:center;margin-top:14px;">
     <button class="import-btn" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-muted)" onclick="loadDemoData()">
       🔬 Încarcă date demo
     </button>
@@ -224,7 +189,6 @@
 <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleFile(event)">
 <input type="file" id="imgInput" accept="image/*" style="display:none" onchange="handleImgUpload(event)">
 
-<!-- APP SHELL -->
 <div class="app-shell" id="appShell">
   <div class="toolbar">
     <div class="search-wrap">
@@ -234,34 +198,25 @@
     <select class="filter-select" id="catFilter" onchange="applyFilters()">
       <option value="">Toate categoriile</option>
     </select>
-    <select class="filter-select" id="expFilter" style="min-width:160px" onchange="applyFilters()">
-      <option value="">Toate termenele</option>
-      <option value="past">⛔ Expirate</option>
-      <option value="soon">⚠️ Expiră curând</option>
-      <option value="ok">✅ Valide</option>
-    </select>
     <div class="results-count" id="resultsCount"></div>
     <button class="import-new-btn" id="adminImportBtn" style="display:none" onclick="showImportScreen()">⬆ Actualizează catalog</button>
   </div>
-
   <div class="table-wrap">
     <table>
-      <thead>
-        <tr>
-          <th onclick="sortBy('denumire')">Denumire <span class="sort-icon" id="sort_denumire">↕</span></th>
-          <th onclick="sortBy('um')">UM <span class="sort-icon" id="sort_um">↕</span></th>
-          <th onclick="sortBy('categorie')">Categorie <span class="sort-icon" id="sort_categorie">↕</span></th>
-          <th onclick="sortBy('pret')">Preț Achiziție <span class="sort-icon" id="sort_pret">↕</span></th>
-          <th onclick="sortBy('stocBuc')">Stoc BUC <span class="sort-icon" id="sort_stocBuc">↕</span></th>
-          <th onclick="sortBy('stocBrv')">Stoc BRV <span class="sort-icon" id="sort_stocBrv">↕</span></th>
-          <th onclick="sortBy('dataTs')">Data Intrare <span class="sort-icon" id="sort_dataTs">↕</span></th>
-        </tr>
-      </thead>
+      <thead><tr>
+        <th onclick="sortBy('denumire')">Denumire <span class="sort-icon" id="sort_denumire">↕</span></th>
+        <th onclick="sortBy('um')">UM <span class="sort-icon" id="sort_um">↕</span></th>
+        <th onclick="sortBy('categorie')">Categorie <span class="sort-icon" id="sort_categorie">↕</span></th>
+        <th onclick="sortBy('pret')">Preț Achiziție <span class="sort-icon" id="sort_pret">↕</span></th>
+        <th onclick="sortBy('stocBuc')">Stoc BUC <span class="sort-icon" id="sort_stocBuc">↕</span></th>
+        <th onclick="sortBy('stocBrv')">Stoc BRV <span class="sort-icon" id="sort_stocBrv">↕</span></th>
+        <th onclick="sortBy('dataTs')">Data Intrare <span class="sort-icon" id="sort_dataTs">↕</span></th>
+      </tr></thead>
       <tbody id="tableBody"></tbody>
     </table>
     <div class="empty-state" id="emptyState" style="display:none">
       <div class="es-icon">🔎</div>
-      <p>Niciun produs găsit pentru criteriile selectate.</p>
+      <p>Niciun produs găsit.</p>
     </div>
   </div>
 </div>
@@ -277,30 +232,20 @@
       <button class="panel-close" onclick="closePanelDirect()">✕</button>
     </div>
     <div class="panel-body">
-      <!-- IMAGE -->
-      <div class="prod-img-wrap" id="imgWrap">
-        <div class="prod-img-placeholder" id="imgPlaceholder" onclick="document.getElementById('imgInput').click()">
+
+      <div class="prod-img-wrap" id="imgWrap" onclick="imgWrapClick(event)">
+        <div class="prod-img-placeholder" id="imgPlaceholder">
           <div class="ph-icon">🖼️</div>
           <span>Click pentru a adăuga o poză</span>
         </div>
-        <img id="prodImg" src="" alt="" style="display:none" onclick="openLightbox(this.src)">
+        <img id="prodImg" src="" alt="" style="display:none" onclick="event.stopPropagation(); openLightbox(this.src)">
         <div class="prod-img-overlay"><span>📷 Schimbă poza</span></div>
-        <div class="img-uploading" id="imgUploading" style="display:none">
+        <div class="img-uploading" id="imgUploading">
           <div class="spinner" style="width:24px;height:24px;border-width:2px"></div>
-          <span>Se încarcă poza...</span>
+          <span>Se salvează poza...</span>
         </div>
-        <button class="remove-img-btn" id="removeImgBtn" onclick="removeImg()">✕</button>
+        <button class="remove-img-btn" id="removeImgBtn" onclick="event.stopPropagation(); removeImg()">✕</button>
       </div>
-      <!-- click overlay to change image -->
-      <script>
-        document.getElementById('imgWrap').addEventListener('click', function(e) {
-          if (e.target === this || e.target.classList.contains('prod-img-overlay') || e.target.closest('.prod-img-overlay')) {
-            if (document.getElementById('prodImg').style.display !== 'none') {
-              document.getElementById('imgInput').click();
-            }
-          }
-        });
-      </script>
 
       <div class="info-grid">
         <div class="info-card full">
@@ -311,10 +256,9 @@
           <div class="info-label">Preț achiziție</div>
           <div class="info-val price" id="pPret">—</div>
         </div>
-        <div class="exp-card" id="pDataCard">
+        <div class="info-card">
           <div class="info-label">Data intrare</div>
-          <div id="pDataDisplay">—</div>
-          <div id="pDataSub" style="font-size:0.72rem;color:var(--text-dim);margin-top:3px;"></div>
+          <div class="info-val" id="pData" style="font-size:0.88rem">—</div>
         </div>
       </div>
 
@@ -349,7 +293,6 @@
   </div>
 </div>
 
-<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <button class="lightbox-close" onclick="closeLightbox()">✕</button>
   <img id="lightboxImg" src="" alt="">
@@ -357,13 +300,12 @@
 
 <div class="toast" id="toast"></div>
 
-<!-- FIREBASE SDK -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-import { getStorage, ref as sRef, uploadString, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-// ─── FIREBASE CONFIG ───
+<script type="module">
+import { initializeApp }          from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyAHgR9eyxnXMIXPwWdIOIgG5x6NZ3dzCNw",
   authDomain: "portofoliu-roa.firebaseapp.com",
@@ -376,20 +318,15 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
-const storage = getStorage(app);
 
-// ─── STATE ───
+// ── STATE ──
 let allProducts = [];
-let filtered = [];
-let sortCol = '';
-let sortDir = 1;
+let filtered    = [];
+let sortCol = '', sortDir = 1;
 let selectedProduct = null;
-
-// ─── ADMIN MODE ───
-// Admin = dacă URL-ul conține ?admin=1
 const IS_ADMIN = new URLSearchParams(window.location.search).has('admin');
 
-// ─── CATEGORY COLORS ───
+// ── CATEGORY COLORS ──
 const catColors = {};
 const palette = [
   ['rgba(61,110,255,0.15)','#3d6eff'],['rgba(168,85,247,0.15)','#a855f7'],
@@ -403,11 +340,11 @@ function getCatColor(cat) {
   return catColors[cat];
 }
 
-// ─── DATE UTILS ───
-function parseExpDate(v) {
+// ── DATE UTILS ──
+function parseDate(v) {
   if (!v || v === '—') return null;
   if (typeof v === 'number') {
-    try { const d = window._XLSSFparse ? window._XLSSFparse(v) : null; if (d) return new Date(d.y, d.m-1, d.d); } catch(e){}
+    try { const d = XLSX.SSF.parse_date_code(v); if (d) return new Date(d.y, d.m-1, d.d); } catch(e){}
     return null;
   }
   const s = String(v).trim();
@@ -419,152 +356,119 @@ function parseExpDate(v) {
   if (m3) return new Date(+m3[3], +m3[2]-1, +m3[1]);
   return null;
 }
-function expStatus(ts) {
-  if (!ts) return 'none';
-  const diff = ts - Date.now();
-  if (diff < 0) return 'past';
-  if (diff < 30 * 864e5) return 'soon';
-  return 'ok';
+function fmtDate(v) {
+  if (!v) return '—';
+  if (typeof v === 'number') {
+    try { const d = XLSX.SSF.parse_date_code(v); if (d) return `${String(d.d).padStart(2,'0')}.${String(d.m).padStart(2,'0')}.${d.y}`; } catch(e){}
+  }
+  return String(v).trim() || '—';
 }
-function expLabel(status, dateStr) {
-  const map = { past: { chip:'exp-past', icon:'⛔' }, soon: { chip:'exp-soon', icon:'⚠️' }, ok: { chip:'exp-ok', icon:'✅' }, none: { chip:'exp-none', icon:'' } };
-  return { ...map[status], text: dateStr || '—' };
-}
-function daysUntil(ts) { if (!ts) return null; return Math.ceil((ts - Date.now()) / 864e5); }
 
-// ─── COLUMN MAPPING ───
-function normCol(s) { return String(s).toLowerCase().replace(/[^a-z0-9]/g,''); }
+// ── COLUMN MAP ──
+function nc(s) { return String(s).toLowerCase().replace(/[^a-z0-9]/g,''); }
 const colMap = {
   denumire: ['denumire','denumireprodus','produs','product','name'],
-  um: ['um','unitatemăsură','unitate','unit','unitatemeasura'],
-  categorie: ['categorie','category','cat','tip'],
-  pret: ['pretachizitie','pret','pretachiz','achizitie','price','cost','pretul'],
-  stocBuc: ['stocbucuresti','stocbuc','bucuresti','buc','stoc1'],
-  stocBrv: ['stocbrasov','stocbrv','brasov','brv','stoc2'],
-  data: ['dataintrare','data','date','intrare','exp','validity','valabilitate','dataexp'],
+  um:       ['um','unitatemăsură','unitate','unit','unitatemeasura'],
+  categorie:['categorie','category','cat','tip'],
+  pret:     ['pretachizitie','pret','pretachiz','achizitie','price','cost','pretul'],
+  stocBuc:  ['stocbucuresti','stocbuc','bucuresti','buc','stoc1'],
+  stocBrv:  ['stocbrasov','stocbrv','brasov','brv','stoc2'],
+  data:     ['dataintrare','data','date','intrare','dataexp','dataexpirare','expirare'],
 };
 function mapHeaders(headers) {
   const res = {};
-  headers.forEach((h, i) => {
-    const n = normCol(String(h));
-    for (const [field, aliases] of Object.entries(colMap)) {
-      if (aliases.includes(n)) res[field] = i;
-    }
-  });
+  headers.forEach((h,i) => { const n=nc(String(h)); for(const[f,a] of Object.entries(colMap)) if(a.includes(n)) res[f]=i; });
   return res;
 }
 
-// ─── FIREBASE: LOAD PRODUCTS ───
-function listenToProducts() {
-  const prodRef = ref(db, 'products');
-  onValue(prodRef, (snapshot) => {
+// ── FIREBASE ──
+function listenProducts() {
+  onValue(ref(db,'products'), snap => {
     document.getElementById('loadingScreen').style.display = 'none';
-    const data = snapshot.val();
-    if (!data || !data.list || data.list.length === 0) {
-      // No products yet
+    const data = snap.val();
+    if (!data || !data.list || !data.list.length) {
       if (IS_ADMIN) {
         document.getElementById('importScreen').style.display = 'block';
-        document.getElementById('dbDot').className = 'db-dot';
-        document.getElementById('dbStatus').textContent = 'Nicio bază de date';
       } else {
         document.getElementById('appShell').classList.add('visible');
-        document.getElementById('dbDot').className = 'db-dot';
-        document.getElementById('dbStatus').textContent = 'Catalog gol';
         document.getElementById('emptyState').style.display = 'block';
-        document.getElementById('emptyState').innerHTML = '<div class="es-icon">📭</div><p>Catalogul este gol. Administratorul nu a încărcat încă produsele.</p>';
+        document.getElementById('emptyState').innerHTML = '<div class="es-icon">📭</div><p>Catalogul este gol. Administratorul nu a încărcat produsele.</p>';
       }
+      document.getElementById('dbDot').className = 'db-dot';
+      document.getElementById('dbStatus').textContent = 'Catalog gol';
       return;
     }
     allProducts = data.list;
     initApp(data.updatedAt);
-  }, (error) => {
+  }, err => {
     document.getElementById('loadingScreen').style.display = 'none';
     document.getElementById('dbDot').className = 'db-dot';
     document.getElementById('dbStatus').textContent = 'Eroare conexiune';
-    showToast('❌ Eroare Firebase: ' + error.message);
+    showToast('❌ ' + err.message);
   });
 }
 
-// ─── FIREBASE: SAVE PRODUCTS ───
-async function saveProductsToFirebase(products) {
-  const prodRef = ref(db, 'products');
-  await set(prodRef, {
+async function saveProducts(products) {
+  await set(ref(db,'products'), {
     list: products,
-    updatedAt: new Date().toLocaleDateString('ro-RO') + ' ' + new Date().toLocaleTimeString('ro-RO', {hour:'2-digit',minute:'2-digit'})
+    updatedAt: new Date().toLocaleDateString('ro-RO') + ' ' + new Date().toLocaleTimeString('ro-RO',{hour:'2-digit',minute:'2-digit'})
   });
 }
 
-// ─── FIREBASE: IMAGE UPLOAD ───
-async function uploadImageToFirebase(productId, base64Data) {
-  const imgRef = sRef(storage, `product-images/${productId}.jpg`);
-  // base64Data is a data URL like "data:image/jpeg;base64,..."
-  await uploadString(imgRef, base64Data, 'data_url');
-  const url = await getDownloadURL(imgRef);
-  // Save URL to database
-  const urlRef = ref(db, `product-images/${productId}`);
-  await set(urlRef, url);
-  return url;
+// Imagini salvate ca base64 direct în Realtime DB
+// Rezoluție redusă automat pentru a încăpea în limita Firebase (10MB/nod)
+async function saveImage(productId, base64) {
+  await set(ref(db, `product-images/${productId}`), base64);
 }
-
-async function deleteImageFromFirebase(productId) {
-  try {
-    const imgRef = sRef(storage, `product-images/${productId}.jpg`);
-    await deleteObject(imgRef);
-  } catch(e) {}
-  const urlRef = ref(db, `product-images/${productId}`);
-  await set(urlRef, null);
-}
-
-async function loadProductImage(productId) {
-  const urlRef = ref(db, `product-images/${productId}`);
-  const snap = await get(urlRef);
+async function loadImage(productId) {
+  const snap = await get(ref(db, `product-images/${productId}`));
   return snap.val();
 }
+async function deleteImage(productId) {
+  await set(ref(db, `product-images/${productId}`), null);
+}
 
-// ─── INIT APP ───
+// ── INIT ──
 function initApp(updatedAt) {
   document.getElementById('importScreen').style.display = 'none';
   document.getElementById('appShell').classList.add('visible');
   document.getElementById('dbDot').className = 'db-dot active';
-  document.getElementById('dbStatus').textContent = `${allProducts.length} produse${updatedAt ? ' · ' + updatedAt : ''}`;
-
-  if (IS_ADMIN) {
-    document.getElementById('adminImportBtn').style.display = 'flex';
-  }
-
-  const cats = [...new Set(allProducts.map(p => p.categorie))].sort();
+  document.getElementById('dbStatus').textContent = `${allProducts.length} produse${updatedAt ? ' · '+updatedAt : ''}`;
+  if (IS_ADMIN) document.getElementById('adminImportBtn').style.display = 'flex';
+  const cats = [...new Set(allProducts.map(p=>p.categorie))].sort();
   const sel = document.getElementById('catFilter');
   sel.innerHTML = '<option value="">Toate categoriile</option>';
-  cats.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; sel.appendChild(o); });
+  cats.forEach(c => { const o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o); });
   applyFilters();
 }
 
-window.showImportScreen = function() {
+window.showImportScreen = () => {
   document.getElementById('appShell').classList.remove('visible');
   document.getElementById('importScreen').style.display = 'block';
 };
 
-// ─── FILE IMPORT ───
-window.onDragOver = (e) => { e.preventDefault(); document.getElementById('dropZone').classList.add('drag'); };
+// ── FILE IMPORT ──
+window.onDragOver = e => { e.preventDefault(); document.getElementById('dropZone').classList.add('drag'); };
 window.onDragLeave = () => document.getElementById('dropZone').classList.remove('drag');
-window.onDrop = (e) => { e.preventDefault(); document.getElementById('dropZone').classList.remove('drag'); if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]); };
-window.handleFile = (e) => { if (e.target.files[0]) processFile(e.target.files[0]); };
+window.onDrop = e => { e.preventDefault(); document.getElementById('dropZone').classList.remove('drag'); if(e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]); };
+window.handleFile = e => { if(e.target.files[0]) processFile(e.target.files[0]); };
 
 function processFile(file) {
   const reader = new FileReader();
-  reader.onload = async function(e) {
+  reader.onload = async e => {
     try {
-      const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-      const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, defval: '' });
+      const wb = XLSX.read(new Uint8Array(e.target.result), {type:'array'});
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1, defval:''});
       if (rows.length < 2) { showToast('Fișierul pare gol!'); return; }
       const map = mapHeaders(rows[0]);
       if (!map.denumire) { showToast('Coloana "Denumire produs" nu a fost găsită!'); return; }
       const products = buildProducts(rows.slice(1), map);
-      showToast('⬆ Se încarcă în Firebase...');
       document.getElementById('dbDot').className = 'db-dot loading';
-      await saveProductsToFirebase(products);
-      showToast(`✓ ${products.length} produse salvate în Firebase!`);
-    } catch(err) { showToast('Eroare: ' + err.message); }
+      document.getElementById('dbStatus').textContent = 'Se salvează...';
+      showToast('⬆ Se încarcă în Firebase...');
+      await saveProducts(products);
+      showToast(`✓ ${products.length} produse salvate!`);
+    } catch(err) { showToast('Eroare: ' + err.message); console.error(err); }
   };
   reader.readAsArrayBuffer(file);
 }
@@ -574,117 +478,80 @@ function buildProducts(rows, map) {
     .filter(r => r[map.denumire] && String(r[map.denumire]).trim())
     .map((r, i) => {
       const rawDate = map.data !== undefined ? r[map.data] : '';
-      let dateStr = '—';
-      let dataTs = null;
-      if (rawDate) {
-        if (typeof rawDate === 'number') {
-          try {
-            const d = XLSX.SSF.parse_date_code(rawDate);
-            if (d) { dateStr = `${String(d.d).padStart(2,'0')}.${String(d.m).padStart(2,'0')}.${d.y}`; dataTs = new Date(d.y, d.m-1, d.d).getTime(); }
-          } catch(e) {}
-        } else {
-          dateStr = String(rawDate).trim() || '—';
-          const parsed = parseExpDate(rawDate);
-          if (parsed) dataTs = parsed.getTime();
-        }
-      }
+      const dateStr = fmtDate(rawDate);
+      const parsed  = parseDate(rawDate);
       return {
         id: i,
-        denumire: String(r[map.denumire] ?? '').trim(),
-        um: String(r[map.um] ?? '—').trim(),
-        categorie: String(r[map.categorie] ?? 'Necategorizat').trim(),
-        pret: parseFloat(String(r[map.pret] ?? '0').replace(',', '.')) || 0,
-        stocBuc: parseFloat(r[map.stocBuc]) || 0,
-        stocBrv: parseFloat(r[map.stocBrv]) || 0,
-        data: dateStr,
-        dataTs: dataTs,
+        denumire:  String(r[map.denumire]??'').trim(),
+        um:        String(r[map.um]??'—').trim(),
+        categorie: String(r[map.categorie]??'General').trim(),
+        pret:      parseFloat(String(r[map.pret]??'0').replace(',','.'))||0,
+        stocBuc:   parseFloat(r[map.stocBuc])||0,
+        stocBrv:   parseFloat(r[map.stocBrv])||0,
+        data:      dateStr,
+        dataTs:    parsed ? parsed.getTime() : null,
       };
     });
 }
 
-// ─── DEMO DATA ───
-window.loadDemoData = async function() {
-  const addDays = (d) => { const x = new Date(); x.setDate(x.getDate()+d); return `${String(x.getDate()).padStart(2,'0')}.${String(x.getMonth()+1).padStart(2,'0')}.${x.getFullYear()}`; };
-  const demoRaw = [
-    ['Ciment Portland CEM I 42.5R 25kg','sac','Materiale construcții',28.50,142,88,addDays(180)],
-    ['Placă OSB 18mm 2440x1220','buc','Materiale construcții',76.00,55,30,addDays(365)],
-    ['Țeavă PEX 16mm (rola 100m)','rola','Instalații',210.00,18,12,addDays(20)],
-    ['Cablu electric NYY-J 3x2.5mm','m','Electrice',4.80,500,320,addDays(500)],
-    ['Gresie porțelanată 60x60 Gri Antracit','m²','Finisaje',62.00,200,95,addDays(15)],
-    ['Vopsea lavabilă albă 15L','bidon','Finisaje',89.00,60,40,addDays(-10)],
-    ['Bulon expandabil M10x100 (set 50)','set','Scule & Unelte',28.00,75,35,addDays(90)],
-    ['Adeziv plăci ceramice 25kg','sac','Finisaje',22.00,180,110,addDays(60)],
-    ['Robinet colțar 1/2 crom','buc','Instalații',14.50,220,0,addDays(-5)],
-    ['Panou gips-carton 12.5mm 2600x1200','buc','Finisaje',48.00,90,55,addDays(200)],
-    ['Prelungitor 5 prize 3m cu siguranță','buc','Electrice',38.00,45,20,addDays(25)],
-    ['Șuruburi lemn Tx 4.5x60 (cutie 200)','cutie','Scule & Unelte',19.50,130,70,addDays(120)],
-    ['Spumă poliuretanică 750ml','buc','Materiale construcții',18.50,300,180,addDays(8)],
-    ['Parchet laminat 8mm stejar natur','m²','Finisaje',89.00,120,65,addDays(300)],
-    ['Sifon pardoseală inox 10x10','buc','Instalații',24.00,85,45,addDays(150)],
-    ['Disc abraziv 230mm granulație 60','buc','Scule & Unelte',6.50,400,250,addDays(-20)],
-    ['Bandă adezivă armată 50mmx25m','rola','Materiale construcții',12.00,200,120,addDays(45)],
-    ['Întrerupător simplu 16A alb','buc','Electrice',9.80,310,170,addDays(240)],
-    ['Piatră cubică granit gri 10x10','m²','Finisaje',145.00,30,15,addDays(400)],
-    ['Țeavă oțel zincat Dn25 6ml','buc','Instalații',67.00,40,0,addDays(5)],
+window.loadDemoData = async () => {
+  const add = d => { const x=new Date(); x.setDate(x.getDate()+d); return `${String(x.getDate()).padStart(2,'0')}.${String(x.getMonth()+1).padStart(2,'0')}.${x.getFullYear()}`; };
+  const rows = [
+    ['Ciment Portland CEM I 42.5R 25kg','sac','Materiale construcții',28.50,142,88,add(-5)],
+    ['Placă OSB 18mm 2440x1220','buc','Materiale construcții',76.00,55,30,add(-10)],
+    ['Țeavă PEX 16mm (rola 100m)','rola','Instalații',210.00,18,12,add(-3)],
+    ['Cablu electric NYY-J 3x2.5mm','m','Electrice',4.80,500,320,add(-20)],
+    ['Gresie porțelanată 60x60 Gri Antracit','m²','Finisaje',62.00,200,95,add(-1)],
+    ['Vopsea lavabilă albă 15L','bidon','Finisaje',89.00,60,40,add(-7)],
+    ['Bulon expandabil M10x100 (set 50)','set','Scule & Unelte',28.00,75,35,add(-14)],
+    ['Adeziv plăci ceramice 25kg','sac','Finisaje',22.00,180,110,add(-2)],
+    ['Robinet colțar 1/2 crom','buc','Instalații',14.50,220,0,add(-30)],
+    ['Panou gips-carton 12.5mm 2600x1200','buc','Finisaje',48.00,90,55,add(-4)],
   ];
   const map = {denumire:0,um:1,categorie:2,pret:3,stocBuc:4,stocBrv:5,data:6};
-  const products = buildProducts(demoRaw, map);
-  showToast('⬆ Se încarcă în Firebase...');
-  await saveProductsToFirebase(products);
+  const products = buildProducts(rows, map);
+  document.getElementById('dbDot').className = 'db-dot loading';
+  await saveProducts(products);
   showToast(`✓ ${products.length} produse demo salvate!`);
 };
 
-// ─── FILTERS ───
-window.applyFilters = function() {
-  const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+// ── FILTERS ──
+window.applyFilters = () => {
+  const q   = (document.getElementById('searchInput').value||'').toLowerCase().trim();
   const cat = document.getElementById('catFilter').value;
-  const expF = document.getElementById('expFilter').value;
-
   filtered = allProducts.filter(p => {
     const mq = !q || p.denumire.toLowerCase().includes(q) || p.categorie.toLowerCase().includes(q) || p.um.toLowerCase().includes(q);
-    const mc = !cat || p.categorie === cat;
-    const st = expStatus(p.dataTs);
-    const me = !expF || st === expF;
-    return mq && mc && me;
+    return mq && (!cat || p.categorie === cat);
   });
-
-  if (sortCol) filtered.sort((a, b) => {
-    let va = a[sortCol], vb = b[sortCol];
-    if (va === null && vb === null) return 0;
-    if (va === null) return sortDir;
-    if (vb === null) return -sortDir;
-    if (typeof va === 'string') return va.localeCompare(vb) * sortDir;
-    return (va - vb) * sortDir;
+  if (sortCol) filtered.sort((a,b) => {
+    let va=a[sortCol], vb=b[sortCol];
+    if (va===null&&vb===null) return 0;
+    if (va===null) return sortDir; if (vb===null) return -sortDir;
+    return (typeof va==='string' ? va.localeCompare(vb) : va-vb) * sortDir;
   });
-
   renderTable();
 };
 
-window.sortBy = function(col) {
-  if (sortCol === col) sortDir *= -1; else { sortCol = col; sortDir = 1; }
-  document.querySelectorAll('.sort-icon').forEach(el => el.textContent = '↕');
-  const icon = document.getElementById('sort_' + col);
-  if (icon) icon.textContent = sortDir === 1 ? '↑' : '↓';
-  document.querySelectorAll('thead th').forEach(th => th.classList.remove('sorted'));
+window.sortBy = col => {
+  if (sortCol===col) sortDir*=-1; else { sortCol=col; sortDir=1; }
+  document.querySelectorAll('.sort-icon').forEach(el=>el.textContent='↕');
+  const ic = document.getElementById('sort_'+col); if(ic) ic.textContent = sortDir===1?'↑':'↓';
+  document.querySelectorAll('thead th').forEach(th=>th.classList.remove('sorted'));
   event.currentTarget.classList.add('sorted');
   applyFilters();
 };
 
-// ─── RENDER TABLE ───
+// ── TABLE ──
 function renderTable() {
   const tbody = document.getElementById('tableBody');
   const empty = document.getElementById('emptyState');
   document.getElementById('resultsCount').innerHTML = `<strong>${filtered.length}</strong> produse`;
-
-  if (!filtered.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  if (!filtered.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
   empty.style.display = 'none';
-
   tbody.innerHTML = filtered.map(p => {
-    const [bg, fg] = getCatColor(p.categorie);
-    const scBuc = p.stocBuc === 0 ? 'zero' : p.stocBuc < 10 ? 'low' : 'ok';
-    const scBrv = p.stocBrv === 0 ? 'zero' : p.stocBrv < 10 ? 'low' : 'ok';
-    const st = expStatus(p.dataTs);
-    const lb = expLabel(st, p.data);
+    const [bg,fg] = getCatColor(p.categorie);
+    const scBuc = p.stocBuc===0?'zero':p.stocBuc<10?'low':'ok';
+    const scBrv = p.stocBrv===0?'zero':p.stocBrv<10?'low':'ok';
     return `<tr onclick="openPanel(${p.id})">
       <td style="font-weight:500;max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.denumire}</td>
       <td style="color:var(--text-muted)">${p.um}</td>
@@ -692,138 +559,134 @@ function renderTable() {
       <td class="mono" style="color:var(--accent)">${p.pret.toFixed(2)} RON</td>
       <td><span class="stock-chip ${scBuc}">${p.stocBuc}</span></td>
       <td><span class="stock-chip ${scBrv}">${p.stocBrv}</span></td>
-      <td><span class="exp-chip ${lb.chip}">${lb.icon ? lb.icon+' ' : ''}${lb.text}</span></td>
+      <td><span class="date-chip">${p.data}</span></td>
     </tr>`;
   }).join('');
 }
 
-// ─── DETAIL PANEL ───
-window.openPanel = async function(id) {
-  selectedProduct = allProducts.find(p => p.id === id);
+// ── PANEL ──
+window.openPanel = async id => {
+  selectedProduct = allProducts.find(p=>p.id===id);
   if (!selectedProduct) return;
   const p = selectedProduct;
-
   document.getElementById('pTitle').textContent = p.denumire;
-  document.getElementById('pUM').textContent = `Unitate de măsură: ${p.um}`;
+  document.getElementById('pUM').textContent = 'Unitate de măsură: '+p.um;
   document.getElementById('pCat').textContent = p.categorie;
-  document.getElementById('pPret').textContent = `${p.pret.toFixed(2)} RON`;
-
-  const st = expStatus(p.dataTs);
-  const lb = expLabel(st, p.data);
-  const card = document.getElementById('pDataCard');
-  card.className = 'exp-card' + (st==='past'?' exp-past-card':st==='soon'?' exp-soon-card':'');
-  document.getElementById('pDataDisplay').innerHTML = `<span class="exp-chip ${lb.chip}" style="font-size:.9rem">${lb.icon ? lb.icon+' ':''}${lb.text}</span>`;
-  const days = daysUntil(p.dataTs);
-  const sub = document.getElementById('pDataSub');
-  if (st==='past') sub.textContent = `Expirat acum ${Math.abs(days)} zile`;
-  else if (st==='soon') sub.textContent = `Expiră în ${days} zile`;
-  else if (st==='ok' && days!==null) sub.textContent = `Valabil încă ${days} zile`;
-  else sub.textContent = '';
-
-  const sbClass = p.stocBuc===0?'zero':p.stocBuc<10?'low':'ok';
-  const srvClass = p.stocBrv===0?'zero':p.stocBrv<10?'low':'ok';
+  document.getElementById('pPret').textContent = p.pret.toFixed(2)+' RON';
+  document.getElementById('pData').textContent = p.data;
+  const sbC = p.stocBuc===0?'zero':p.stocBuc<10?'low':'ok';
+  const srC = p.stocBrv===0?'zero':p.stocBrv<10?'low':'ok';
   document.getElementById('pStocBuc').textContent = p.stocBuc;
-  document.getElementById('pStocBuc').className = 'stock-val '+sbClass;
+  document.getElementById('pStocBuc').className = 'stock-val '+sbC;
   document.getElementById('pStocBrv').textContent = p.stocBrv;
-  document.getElementById('pStocBrv').className = 'stock-val '+srvClass;
-
+  document.getElementById('pStocBrv').className = 'stock-val '+srC;
   // Load image
   const imgEl = document.getElementById('prodImg');
-  const placeholder = document.getElementById('imgPlaceholder');
-  imgEl.style.display = 'none';
-  placeholder.style.display = 'flex';
+  const ph    = document.getElementById('imgPlaceholder');
+  imgEl.style.display='none'; ph.style.display='flex';
   try {
-    const url = await loadProductImage(p.id);
-    if (url) { imgEl.src = url; imgEl.style.display = 'block'; placeholder.style.display = 'none'; }
-    else { imgEl.src = ''; }
-  } catch(e) {}
-
+    const url = await loadImage(p.id);
+    if (url) { imgEl.src=url; imgEl.style.display='block'; ph.style.display='none'; }
+    else imgEl.src='';
+  } catch(e){}
   document.getElementById('adaosInput').value = 20;
   calcPrice();
   document.getElementById('panelOverlay').classList.add('open');
 };
 
-window.closePanel = function(e) { if (e.target === document.getElementById('panelOverlay')) closePanelDirect(); };
-window.closePanelDirect = function() { document.getElementById('panelOverlay').classList.remove('open'); };
+window.imgWrapClick = e => {
+  if (e.target.closest('#prodImg')) return; // handled by img onclick
+  document.getElementById('imgInput').click();
+};
+window.closePanel = e => { if(e.target===document.getElementById('panelOverlay')) closePanelDirect(); };
+window.closePanelDirect = () => document.getElementById('panelOverlay').classList.remove('open');
 
-// ─── IMAGE UPLOAD ───
-window.handleImgUpload = async function(e) {
+// ── IMAGE ──
+window.handleImgUpload = async e => {
   const file = e.target.files[0];
   if (!file || !selectedProduct) return;
-  if (file.size > 5 * 1024 * 1024) { showToast('Poza trebuie să fie sub 5MB'); return; }
-
-  document.getElementById('imgUploading').style.display = 'flex';
+  if (file.size > 4*1024*1024) { showToast('Poza trebuie să fie sub 4MB'); return; }
+  const uploading = document.getElementById('imgUploading');
+  uploading.style.display = 'flex';
   const reader = new FileReader();
-  reader.onload = async function(ev) {
+  reader.onload = async ev => {
     try {
-      const url = await uploadImageToFirebase(selectedProduct.id, ev.target.result);
-      document.getElementById('prodImg').src = url;
+      // Compress image before saving to Firebase
+      const compressed = await compressImage(ev.target.result, 800);
+      await saveImage(selectedProduct.id, compressed);
+      document.getElementById('prodImg').src = compressed;
       document.getElementById('prodImg').style.display = 'block';
       document.getElementById('imgPlaceholder').style.display = 'none';
-      showToast('✓ Poza salvată în Firebase!');
-    } catch(err) { showToast('Eroare upload: ' + err.message); }
-    finally { document.getElementById('imgUploading').style.display = 'none'; }
+      showToast('✓ Poza salvată!');
+    } catch(err) { showToast('Eroare: '+err.message); }
+    finally { uploading.style.display='none'; }
   };
   reader.readAsDataURL(file);
-  e.target.value = '';
+  e.target.value='';
 };
 
-window.removeImg = async function() {
+function compressImage(dataUrl, maxWidth) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let w = img.width, h = img.height;
+      if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
+      canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      resolve(canvas.toDataURL('image/jpeg', 0.75));
+    };
+    img.src = dataUrl;
+  });
+}
+
+window.removeImg = async () => {
   if (!selectedProduct) return;
   try {
-    await deleteImageFromFirebase(selectedProduct.id);
-    document.getElementById('prodImg').src = '';
-    document.getElementById('prodImg').style.display = 'none';
-    document.getElementById('imgPlaceholder').style.display = 'flex';
+    await deleteImage(selectedProduct.id);
+    document.getElementById('prodImg').src='';
+    document.getElementById('prodImg').style.display='none';
+    document.getElementById('imgPlaceholder').style.display='flex';
     showToast('Poză eliminată');
-  } catch(e) { showToast('Eroare: ' + e.message); }
+  } catch(e) { showToast('Eroare: '+e.message); }
 };
 
-window.openLightbox = function(src) {
-  document.getElementById('lightboxImg').src = src;
-  document.getElementById('lightbox').classList.add('open');
-};
-window.closeLightbox = function() { document.getElementById('lightbox').classList.remove('open'); };
+window.openLightbox  = src => { document.getElementById('lightboxImg').src=src; document.getElementById('lightbox').classList.add('open'); };
+window.closeLightbox = ()  => document.getElementById('lightbox').classList.remove('open');
 
-// ─── CALCULATOR ───
-window.calcPrice = function() {
+// ── CALCULATOR ──
+window.calcPrice = () => {
   if (!selectedProduct) return;
-  const adaos = parseFloat(document.getElementById('adaosInput').value) || 0;
-  const pret = selectedProduct.pret;
-  const final = pret * (1 + adaos / 100);
-  document.getElementById('priceFinal').textContent = `${final.toFixed(2)} RON`;
-  document.getElementById('priceBreakdown').textContent = `${pret.toFixed(2)} + ${(final-pret).toFixed(2)} RON adaos (${adaos}%)`;
+  const a = parseFloat(document.getElementById('adaosInput').value)||0;
+  const f = selectedProduct.pret*(1+a/100);
+  document.getElementById('priceFinal').textContent = f.toFixed(2)+' RON';
+  document.getElementById('priceBreakdown').textContent = `${selectedProduct.pret.toFixed(2)} + ${(f-selectedProduct.pret).toFixed(2)} RON adaos (${a}%)`;
   document.getElementById('copyBtn').classList.remove('copied');
-  document.getElementById('copyBtn').innerHTML = '📋 Copiează prețul';
+  document.getElementById('copyBtn').innerHTML='📋 Copiează prețul';
 };
 
-window.copyPrice = function() {
+window.copyPrice = () => {
   if (!selectedProduct) return;
-  const adaos = parseFloat(document.getElementById('adaosInput').value) || 0;
-  const final = selectedProduct.pret * (1 + adaos / 100);
-  navigator.clipboard.writeText(`${selectedProduct.denumire} — ${final.toFixed(2)} RON (adaos ${adaos}%)`).then(() => {
-    const btn = document.getElementById('copyBtn');
-    btn.innerHTML = '✓ Copiat!'; btn.classList.add('copied');
-    setTimeout(() => { btn.innerHTML = '📋 Copiează prețul'; btn.classList.remove('copied'); }, 2000);
+  const a = parseFloat(document.getElementById('adaosInput').value)||0;
+  const f = selectedProduct.pret*(1+a/100);
+  navigator.clipboard.writeText(`${selectedProduct.denumire} — ${f.toFixed(2)} RON (adaos ${a}%)`).then(()=>{
+    const btn=document.getElementById('copyBtn');
+    btn.innerHTML='✓ Copiat!'; btn.classList.add('copied');
+    setTimeout(()=>{ btn.innerHTML='📋 Copiează prețul'; btn.classList.remove('copied'); },2000);
   });
 };
 
-// ─── TOAST ───
-window.showToast = function(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+// ── TOAST ──
+window.showToast = msg => {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
 };
 
-// ─── KEYBOARD ───
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closePanelDirect(); closeLightbox(); }
-});
+document.addEventListener('keydown', e => { if(e.key==='Escape'){ closePanelDirect(); closeLightbox(); } });
 
-// ─── START ───
-listenToProducts();
+// ── START ──
+listenProducts();
 </script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </body>
 </html>
