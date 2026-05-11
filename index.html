@@ -628,7 +628,7 @@ window.openPanel = async id => {
     if (url) { imgEl.src=url; imgEl.style.display='block'; ph.style.display='none'; }
     else imgEl.src='';
   } catch(e){}
-  document.getElementById('adaosInput').value = 20;
+  document.getElementById('adaosInput').value = ' ';
   calcPrice();
   document.getElementById('panelOverlay').classList.add('open');
 };
