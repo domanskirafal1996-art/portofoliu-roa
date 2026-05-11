@@ -277,7 +277,7 @@
         <div class="calc-title">🧮 Calculator adaos comercial</div>
         <div class="calc-row">
           <span class="calc-label">Adaos dorit</span>
-          <input class="adaos-input" id="adaosInput" type="number" min="0" max="999" step="0.5" value="20" oninput="calcPrice()">
+          <input class="adaos-input" id="adaosInput" type="number" min="0" max="999" step="0.5" value="" placeholder="adaos %" oninput="calcPrice()">
           <span class="adaos-suffix">%</span>
         </div>
         <div class="price-result">
@@ -367,27 +367,37 @@ function fmtDate(v) {
 // ── COLUMN MAP ──
 function nc(s) { return String(s).toLowerCase().replace(/[^a-z0-9]/g,''); }
 const colMap = {
-  denumire: ['denumire','denumireprodus','produs','product','name','denumireprodus'],
-  um:       ['um','unitatemăsură','unitate','unit','unitatemeasura','um'],
-  categorie:['categorie','categorieprincipala','categorieprincipală','category','cat','tip'],
-  pret:     ['pretachizitie','pret','pretachiz','achizitie','price','cost','costultima','costiultima','costultimaachizitie','pretachizitie','pretur','preturi'],
-  stocBuc:  ['stocbucuresti','stocbuc','stocbucurești','bucuresti','buc','stoc1','stocbucures','stocbucu'],
-  stocBrv:  ['stocbrasov','stocbrașov','stocbrv','brasov','brasov','brv','stoc2','stocbrasov'],
-  data:     ['dataintrare','data','date','intrare','dataexp','dataexpirare','expirare','import'],
+  denumire: ['denumireprodus','denumire','produs','product','name'],
+  um:       ['um','unitatemeasura','unitate'],
+  categorie:['categorieprincipala','categorieprincip','categorie','category','cat','tip'],
+  pret:     ['costultima','costiultima','costultimaachizitie','pretachizitie','pretachiz','achizitie','price','cost'],
+  stocBuc:  ['stocbucuresti','stocbucures','stocbucu','stocbuc'],
+  stocBrv:  ['stocbrasov','stocbras','stocbrv'],
+  data:     ['dataintrare','dataachizitie','intrare','dataexpirare','expirare','import','data'],
 };
 function mapHeaders(headers) {
   const res = {};
-  headers.forEach((h,i) => {
+  // Exact match first
+  headers.forEach((h, i) => {
     const n = nc(String(h));
     if (!n) return;
-    for (const [f,a] of Object.entries(colMap)) {
-      if (a.some(alias => n.includes(alias) || alias.includes(n))) {
-        if (res[f] === undefined) res[f] = i;
-      }
+    for (const [f, aliases] of Object.entries(colMap)) {
+      if (res[f] !== undefined) continue;
+      if (aliases.includes(n)) res[f] = i;
+    }
+  });
+  // Partial match fallback
+  headers.forEach((h, i) => {
+    const n = nc(String(h));
+    if (!n) return;
+    for (const [f, aliases] of Object.entries(colMap)) {
+      if (res[f] !== undefined) continue;
+      if (aliases.some(alias => n.startsWith(alias) || alias.startsWith(n))) res[f] = i;
     }
   });
   return res;
 }
+function roundTo05(val) { return Math.round(val * 20) / 20; }
 
 // ── FIREBASE ──
 function listenProducts() {
@@ -687,7 +697,8 @@ window.closeLightbox = ()  => document.getElementById('lightbox').classList.remo
 window.calcPrice = () => {
   if (!selectedProduct) return;
   const a = parseFloat(document.getElementById('adaosInput').value)||0;
-  const f = selectedProduct.pret*(1+a/100);
+  const raw = selectedProduct.pret*(1+a/100);
+  const f = roundTo05(raw);
   document.getElementById('priceFinal').textContent = f.toFixed(2)+' RON';
   document.getElementById('priceBreakdown').textContent = `${selectedProduct.pret.toFixed(2)} + ${(f-selectedProduct.pret).toFixed(2)} RON adaos (${a}%)`;
   document.getElementById('copyBtn').classList.remove('copied');
@@ -697,7 +708,7 @@ window.calcPrice = () => {
 window.copyPrice = () => {
   if (!selectedProduct) return;
   const a = parseFloat(document.getElementById('adaosInput').value)||0;
-  const f = selectedProduct.pret*(1+a/100);
+  const f = roundTo05(selectedProduct.pret*(1+a/100));
   navigator.clipboard.writeText(`${selectedProduct.denumire} — ${f.toFixed(2)} RON (adaos ${a}%)`).then(()=>{
     const btn=document.getElementById('copyBtn');
     btn.innerHTML='✓ Copiat!'; btn.classList.add('copied');
