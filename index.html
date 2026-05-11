@@ -211,7 +211,7 @@
       <br style="margin-bottom:6px">
       <span>Denumire produs</span><span>UM</span><span>Categorie</span>
       <span>Pret achizitie</span><span>Stoc Bucuresti</span><span>Stoc Brasov</span>
-      <span>Data expirare</span>
+      <span>Data intrare</span>
     </div>
   </div>
   <div style="text-align:center;margin-top:12px;">
@@ -254,7 +254,7 @@
           <th onclick="sortBy('pret')">Preț Achiziție <span class="sort-icon" id="sort_pret">↕</span></th>
           <th onclick="sortBy('stocBuc')">Stoc BUC <span class="sort-icon" id="sort_stocBuc">↕</span></th>
           <th onclick="sortBy('stocBrv')">Stoc BRV <span class="sort-icon" id="sort_stocBrv">↕</span></th>
-          <th onclick="sortBy('dataTs')">Data Expirare <span class="sort-icon" id="sort_dataTs">↕</span></th>
+          <th onclick="sortBy('dataTs')">Data Intrare <span class="sort-icon" id="sort_dataTs">↕</span></th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
@@ -312,7 +312,7 @@
           <div class="info-val price" id="pPret">—</div>
         </div>
         <div class="exp-card" id="pDataCard">
-          <div class="info-label">Data expirare</div>
+          <div class="info-label">Data intrare</div>
           <div id="pDataDisplay">—</div>
           <div id="pDataSub" style="font-size:0.72rem;color:var(--text-dim);margin-top:3px;"></div>
         </div>
@@ -441,7 +441,7 @@ const colMap = {
   pret: ['pretachizitie','pret','pretachiz','achizitie','price','cost','pretul'],
   stocBuc: ['stocbucuresti','stocbuc','bucuresti','buc','stoc1'],
   stocBrv: ['stocbrasov','stocbrv','brasov','brv','stoc2'],
-  data: ['dataexpirare','data','date','expirare','exp','validity','valabilitate','dataexp'],
+  data: ['dataintrare','data','date','intrare','exp','validity','valabilitate','dataexp'],
 };
 function mapHeaders(headers) {
   const res = {};
