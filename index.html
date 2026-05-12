@@ -258,16 +258,14 @@
     td:nth-child(2) { display: none; }
     /* Categorie */
     td:nth-child(3) { grid-column: 1; align-self: center; }
-    /* Pret */
-    td:nth-child(4) { grid-column: 2; text-align: right; font-size: .88rem; }
     /* Stoc BUC */
-    td:nth-child(5) { font-size: .78rem; }
-    td:nth-child(5)::before { content: "BUC: "; color: var(--text-dim); font-size: .72rem; }
+    td:nth-child(4) { font-size: .78rem; }
+    td:nth-child(4)::before { content: "BUC: "; color: var(--text-dim); font-size: .72rem; }
     /* Stoc BRV */
-    td:nth-child(6) { font-size: .78rem; }
-    td:nth-child(6)::before { content: "BRV: "; color: var(--text-dim); font-size: .72rem; }
+    td:nth-child(5) { font-size: .78rem; }
+    td:nth-child(5)::before { content: "BRV: "; color: var(--text-dim); font-size: .72rem; }
     /* Data */
-    td:nth-child(7) { grid-column: 1 / -1; font-size: .74rem; color: var(--text-dim); }
+    td:nth-child(6) { grid-column: 1 / -1; font-size: .74rem; color: var(--text-dim); }
 
     /* Panels - full screen on mobile */
     .detail-panel { width: 100vw; }
@@ -341,7 +339,6 @@
         <th onclick="sortBy('denumire')">Denumire <span class="sort-icon" id="sort_denumire">↕</span></th>
         <th onclick="sortBy('um')">UM <span class="sort-icon" id="sort_um">↕</span></th>
         <th onclick="sortBy('categorie')">Categorie <span class="sort-icon" id="sort_categorie">↕</span></th>
-        <th onclick="sortBy('pret')">Preț Ach. <span class="sort-icon" id="sort_pret">↕</span></th>
         <th onclick="sortBy('stocBuc')">Stoc BUC <span class="sort-icon" id="sort_stocBuc">↕</span></th>
         <th onclick="sortBy('stocBrv')">Stoc BRV <span class="sort-icon" id="sort_stocBrv">↕</span></th>
         <th onclick="sortBy('dataTs')">Data Intrare <span class="sort-icon" id="sort_dataTs">↕</span></th>
@@ -644,7 +641,6 @@ function renderTable(){
       <td style="font-weight:500;max-width:230px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.denumire}${badge}</td>
       <td style="color:var(--text-muted)">${p.um}</td>
       <td><span class="cat-badge" style="background:${bg};color:${fg}">${p.categorie}</span></td>
-      <td class="mono" style="color:var(--accent)">${p.pret.toFixed(2)} RON</td>
       <td><span class="stk ${sc1}">${p.stocBuc}</span></td>
       <td><span class="stk ${sc2}">${p.stocBrv}</span></td>
       <td><span class="date-chip">${p.data}</span></td>
