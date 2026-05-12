@@ -206,6 +206,81 @@
   ::-webkit-scrollbar { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+  /* ═══════════════════════════════
+     MOBILE RESPONSIVE
+  ═══════════════════════════════ */
+  @media (max-width: 768px) {
+    /* Header compact */
+    header { padding: 0 12px; height: 54px; }
+    .logo span:first-child { font-size: .92rem; }
+    .db-info { display: none; }
+    .cart-btn { padding: 6px 12px; font-size: .82rem; }
+
+    /* Toolbar */
+    .toolbar { padding: 12px 12px 0; gap: 8px; }
+    .filter-select { min-width: 0; flex: 1; font-size: .82rem; }
+    .import-new-btn { padding: 8px 10px; font-size: .78rem; }
+    .results-count { display: none; }
+
+    /* Table - mobile card view */
+    .table-wrap { padding: 8px 12px; overflow-x: hidden; }
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
+    tbody tr {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 8px;
+      padding: 12px 14px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-rows: auto auto auto;
+      gap: 4px 8px;
+      cursor: pointer;
+    }
+    tbody tr:hover { background: var(--surface2); border-color: var(--border-light); }
+
+    /* Cell reordering for card layout */
+    td { padding: 0; border: none; font-size: .85rem; }
+    /* Denumire - full width top */
+    td:nth-child(1) {
+      grid-column: 1 / -1;
+      font-weight: 700;
+      font-size: .9rem;
+      white-space: normal !important;
+      overflow: visible !important;
+      text-overflow: unset !important;
+      max-width: none !important;
+      margin-bottom: 4px;
+    }
+    /* UM - hidden on mobile (shown in detail) */
+    td:nth-child(2) { display: none; }
+    /* Categorie */
+    td:nth-child(3) { grid-column: 1; align-self: center; }
+    /* Pret */
+    td:nth-child(4) { grid-column: 2; text-align: right; font-size: .88rem; }
+    /* Stoc BUC */
+    td:nth-child(5) { font-size: .78rem; }
+    td:nth-child(5)::before { content: "BUC: "; color: var(--text-dim); font-size: .72rem; }
+    /* Stoc BRV */
+    td:nth-child(6) { font-size: .78rem; }
+    td:nth-child(6)::before { content: "BRV: "; color: var(--text-dim); font-size: .72rem; }
+    /* Data */
+    td:nth-child(7) { grid-column: 1 / -1; font-size: .74rem; color: var(--text-dim); }
+
+    /* Panels - full screen on mobile */
+    .detail-panel { width: 100vw; }
+    .cart-panel { width: 100vw; }
+
+    /* Import screen */
+    .admin-banner { margin: 12px 12px 0; }
+    .import-zone { margin: 16px 12px 0; padding: 32px 20px; }
+  }
+
+  @media (max-width: 480px) {
+    .logo-badge { display: none; }
+  }
 </style>
 </head>
 <body>
