@@ -2,7 +2,7 @@
 <html lang="ro">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Portofoliu ROA — Agent Tool</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -287,7 +287,7 @@
   <div class="logo"><span>📦 Portofoliu ROA</span><span class="logo-badge">AGENT</span></div>
   <div class="header-right">
     <button class="cart-btn" id="cartBtn" onclick="openCart()">
-      🛒 Comandă <span class="cart-count" id="cartCount">0</span>
+      📋 Listă <span class="cart-count" id="cartCount">0</span>
     </button>
     <div class="db-info">
       <div class="db-dot loading" id="dbDot"></div>
@@ -392,11 +392,11 @@
         <button class="copy-price-btn" id="copyBtn" onclick="copyPrice()">📋 Copiează prețul</button>
       </div>
       <div class="add-order-section">
-        <div class="add-order-title">🛒 Adaugă în comandă</div>
+        <div class="add-order-title">📋 Adaugă în listă</div>
         <div class="add-order-row">
           <input class="qty-input" id="qtyInput" type="number" min="0.01" step="1" value="1">
           <span class="um-label" id="addUmLabel">buc</span>
-          <button class="add-btn" id="addBtn" onclick="addToOrder()">+ Adaugă în comandă</button>
+          <button class="add-btn" id="addBtn" onclick="addToOrder()">+ Adaugă în listă</button>
         </div>
         <div class="in-cart-info" id="inCartInfo">
           <span id="inCartText">—</span>
@@ -412,31 +412,31 @@
   <div class="cart-panel">
     <div class="cart-header">
       <div class="cart-header-left">
-        <h2>🛒 Comandă curentă</h2>
+        <h2>📋 Listă produse</h2>
         <p id="cartHeaderSub">Adaugă produse din catalog</p>
       </div>
       <button class="panel-close" onclick="closeCart()">✕</button>
     </div>
     <div class="cart-meta">
       <div class="meta-input-wrap">
-        <div class="meta-label">Numele agentului</div>
+        <div class="meta-label">Agent</div>
         <input class="meta-input" id="agentName" placeholder="ex. Ion Popescu" oninput="saveCartMeta()">
       </div>
       <div class="meta-input-wrap">
-        <div class="meta-label">Numele clientului</div>
+        <div class="meta-label">Client</div>
         <input class="meta-input" id="clientName" placeholder="ex. SC Firma SRL" oninput="saveCartMeta()">
       </div>
     </div>
     <div class="cart-items" id="cartItems"></div>
     <div class="cart-footer">
       <div class="cart-summary" id="cartSummary" style="display:none">
-        <div class="cs-row"><span>Produse distincte</span><span class="cs-val" id="csProds">0</span></div>
+        <div class="cs-row"><span>Produse</span><span class="cs-val" id="csProds">0</span></div>
         <div class="cs-row"><span>Cantitate totală</span><span class="cs-val" id="csQty">0</span></div>
         <div class="cs-row total"><span>Total estimat</span><span class="cs-val" id="csTotal">0.00 RON</span></div>
       </div>
       <div class="cart-actions">
-        <button class="btn-clear" onclick="confirmClearCart()">🗑 Golește</button>
-        <button class="btn-export" onclick="exportOrder()">📥 Exportă Excel</button>
+        <button class="btn-clear" onclick="confirmClearCart()">🗑 Golește lista</button>
+        <button class="btn-export" onclick="exportOrder()">📥 Exportă listă Excel</button>
       </div>
     </div>
   </div>
@@ -706,8 +706,8 @@ window.addToOrder=()=>{
   if(existing){existing.qty=+(existing.qty+qty).toFixed(3);existing.pretNegociat=pretNeg;existing.adaos=adaos;}
   else cart.items.push({id:selectedProduct.id,denumire:selectedProduct.denumire,um:selectedProduct.um,pretAch:selectedProduct.pret,pretNegociat:pretNeg,adaos,qty});
   saveCart();updateInCartInfo(selectedProduct.id);renderTable();
-  const btn=document.getElementById('addBtn');btn.textContent='✓ Adaugat!';btn.classList.add('added');
-  setTimeout(()=>{btn.textContent='+ Adauga in comanda';btn.classList.remove('added');},1500);
+  const btn=document.getElementById('addBtn');btn.textContent='✓ Adăugat!';btn.classList.add('added');
+  setTimeout(()=>{btn.textContent='+ Adaugă în listă';btn.classList.remove('added');},1500);
 };
 window.removeFromOrderDirect=()=>{
   if(!selectedProduct)return;
@@ -717,7 +717,7 @@ window.removeFromOrderDirect=()=>{
 function updateInCartInfo(id){
   const item=cart.items.find(i=>i.id===id);
   const el=document.getElementById('inCartInfo'),txt=document.getElementById('inCartText');
-  if(item){el.classList.add('show');txt.textContent=`In comanda: ${item.qty} ${item.um} x ${item.pretNegociat.toFixed(2)} RON`;}
+  if(item){el.classList.add('show');txt.textContent=`În listă: ${item.qty} ${item.um} x ${item.pretNegociat.toFixed(2)} RON`;}
   else el.classList.remove('show');
 }
 
@@ -726,13 +726,13 @@ function updateCartUI(){
   document.getElementById('cartCount').textContent=total||0;
   const btn=document.getElementById('cartBtn');
   if(total>0)btn.classList.add('has-items');else btn.classList.remove('has-items');
-  document.getElementById('cartHeaderSub').textContent=total>0?`${cart.items.length} produs${cart.items.length!==1?'e':''} · ${total} buc total`:'Adauga produse din catalog';
+  document.getElementById('cartHeaderSub').textContent=total>0?`${cart.items.length} produs${cart.items.length!==1?'e':''} · ${total} buc total`:'Adaugă produse din catalog';
   renderCartItems();
 }
 function renderCartItems(){
   const container=document.getElementById('cartItems'),footer=document.getElementById('cartSummary');
   if(!cart.items.length){
-    container.innerHTML='<div class="cart-empty"><div class="ce-icon">🛒</div><p>Comanda este goala.<br>Selecteaza produse din catalog.</p></div>';
+    container.innerHTML='<div class="cart-empty"><div class="ce-icon">🛒</div><p>Lista este goală.<br>Selecteaza produse din catalog.</p></div>';
     footer.style.display='none';return;
   }
   footer.style.display='block';
@@ -772,7 +772,7 @@ window.closeCartOverlay=e=>{if(e.target===document.getElementById('cartOverlay')
 
 // EXPORT
 window.exportOrder=()=>{
-  if(!cart.items.length){showToast('Comanda este goala!');return;}
+  if(!cart.items.length){showToast('Lista este goală!');return;}
   const agent=cart.agentName||'—';
   const client=cart.clientName||'—';
   const dateStr=new Date().toLocaleDateString('ro-RO');
@@ -787,16 +787,16 @@ window.exportOrder=()=>{
   const ws=XLSX.utils.aoa_to_sheet(rows);
   ws['!cols']=[{wch:45},{wch:12},{wch:8},{wch:18},{wch:18},{wch:10}];
   const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,'Comanda');
-  const fname=`Comanda_${client.replace(/\s+/g,'_')}_${agent.replace(/\s+/g,'_')}_${dateStr.replace(/\./g,'-')}.xlsx`;
+  XLSX.utils.book_append_sheet(wb,ws,'Lista produse');
+  const fname=`Lista_${client.replace(/\s+/g,'_')}_${agent.replace(/\s+/g,'_')}_${dateStr.replace(/\./g,'-')}.xlsx`;
   XLSX.writeFile(wb,fname);
   showToast('✓ Exportat: '+fname);
 };
 
 // CLEAR CART
 window.confirmClearCart=()=>{
-  openModal('Golesti comanda?','Toate produsele vor fi eliminate. Aceasta actiune nu poate fi anulata.',()=>{
-    cart.items=[];saveCart();renderTable();if(selectedProduct)updateInCartInfo(selectedProduct.id);showToast('Comanda golita');
+  openModal('Golești lista?','Toate produsele vor fi eliminate din listă.',()=>{
+    cart.items=[];saveCart();renderTable();if(selectedProduct)updateInCartInfo(selectedProduct.id);showToast('Listă golită');
   });
 };
 
